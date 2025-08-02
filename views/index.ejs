@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chesso - Chess Game</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h2>Chesso - Chess Game</h2>
+    <div id="player-info" class="player-info">
+        <span id="player-role">Connecting...</span>
+    </div>
+    <div class="chessboard">
+        <!-- Chess board will be rendered by JavaScript -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.8.1/dist/socket.io.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/chessgame.js"></script>  
+</body>
+</html>
