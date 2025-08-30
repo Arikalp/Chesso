@@ -7,16 +7,59 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h2>Chesso - Chess Game</h2>
-    <div id="player-info" class="player-info">
-        <span id="player-role">Connecting...</span>
+    <div class="game-header">
+        <h2>♔ Chesso ♛</h2>
+        <div class="game-controls">
+            <button onclick="toggleTheme()" class="theme-btn" id="theme-toggle">🌙</button>
+            <button onclick="goToLobby()" class="control-btn">Back to Lobby</button>
+            <span id="user-name" class="user-display"></span>
+        </div>
     </div>
-    <div class="chessboard">
-        <!-- Chess board will be rendered by JavaScript -->
+    
+    <div class="game-container">
+        <div class="game-sidebar">
+            <div class="player-card opponent">
+                <div class="player-avatar">♛</div>
+                <div class="player-name" id="opponent-name">Waiting...</div>
+                <div class="player-status" id="opponent-status">Connecting</div>
+            </div>
+            
+            <div class="game-info">
+                <div class="turn-indicator">
+                    <span id="turn-display">White to move</span>
+                </div>
+                <div class="game-timer">
+                    <span id="game-timer">00:00</span>
+                </div>
+                <div class="game-status">
+                    <span id="game-status">In Progress</span>
+                </div>
+            </div>
+            
+            <div class="player-card current">
+                <div class="player-avatar">♔</div>
+                <div class="player-name" id="current-player-name">You</div>
+                <div class="player-role" id="player-role">Connecting...</div>
+            </div>
+        </div>
+        
+        <div class="board-container">
+            <div class="chessboard">
+                <!-- Chess board will be rendered by JavaScript -->
+            </div>
+        </div>
     </div>
+    
+    <footer class="app-footer">
+        <p>Developed by Sankalp with ❤️</p>
+    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.8.1/dist/socket.io.min.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/firebase-config.js"></script>
     <script src="/js/chessgame.js"></script>  
 </body>
 </html>

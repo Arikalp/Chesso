@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chesso - Lobby</title>
+    <link rel="stylesheet" href="/css/lobby.css">
+</head>
+<body>
+    <div class="lobby-container">
+        <header class="lobby-header">
+            <h1>♔ Chesso ♛</h1>
+            <div class="user-info">
+                <button onclick="toggleTheme()" class="theme-btn" id="theme-toggle">🌙</button>
+                <span id="user-name">Loading...</span>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <div class="lobby-content">
+            <div class="game-options">
+                <div class="option-card">
+                    <h3>Quick Match</h3>
+                    <p>Find a random opponent</p>
+                    <button onclick="findQuickMatch()" class="primary-btn">Find Match</button>
+                </div>
+                
+                <div class="option-card">
+                    <h3>Create Game</h3>
+                    <p>Create a room and invite friends</p>
+                    <button onclick="createGame()" class="primary-btn">Create Room</button>
+                </div>
+                
+                <div class="option-card">
+                    <h3>Join Game</h3>
+                    <p>Enter room code to join</p>
+                    <input type="text" id="room-code" placeholder="Room Code">
+                    <button onclick="joinGame()" class="primary-btn">Join Room</button>
+                </div>
+                
+                <div class="option-card">
+                    <h3>Find Player</h3>
+                    <p>Search by Player ID</p>
+                    <input type="text" id="player-search" placeholder="Player ID (e.g. #ABC123)">
+                    <button onclick="searchPlayer()" class="primary-btn">Search Player</button>
+                </div>
+            </div>
+            
+            <div class="player-id-section">
+                <div class="my-player-id">
+                    <span>Your Player ID: </span>
+                    <strong id="my-player-id">#LOADING</strong>
+                    <button onclick="copyPlayerId()" class="copy-btn">Copy</button>
+                </div>
+            </div>
+
+            <div class="social-section">
+                <div class="social-tabs">
+                    <button class="social-tab active" onclick="showTab('players')">Online Players</button>
+                    <button class="social-tab" onclick="showTab('friends')">Friends</button>
+                    <button class="social-tab" onclick="showTab('requests')">Friend Requests</button>
+                </div>
+                
+                <div id="players-tab" class="tab-content active">
+                    <div id="players-list" class="players-list">
+                        <!-- Players will be populated here -->
+                    </div>
+                </div>
+                
+                <div id="friends-tab" class="tab-content">
+                    <div id="friends-list" class="players-list">
+                        <!-- Friends will be populated here -->
+                    </div>
+                </div>
+                
+                <div id="requests-tab" class="tab-content">
+                    <div id="friend-requests-list" class="players-list">
+                        <!-- Friend requests will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-invites">
+                <h3>Game Invitations</h3>
+                <div id="invites-list" class="invites-list">
+                    <!-- Invitations will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="app-footer">
+        <p>Developed by Sankalp with ❤️</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/firebase-config.js"></script>
+    <script src="/js/lobby.js"></script>
+</body>
+</html>
