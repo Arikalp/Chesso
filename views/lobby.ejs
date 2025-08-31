@@ -46,11 +46,21 @@
                 </div>
             </div>
             
-            <div class="player-id-section">
-                <div class="my-player-id">
-                    <span>Your Player ID: </span>
-                    <strong id="my-player-id">#LOADING</strong>
-                    <button onclick="copyPlayerId()" class="copy-btn">Copy</button>
+            <div class="chat-section">
+                <div class="chat-header">
+                    <span>Global Chat</span>
+                    <div class="player-id-mini">
+                        <span>ID: </span>
+                        <strong id="my-player-id">#LOADING</strong>
+                        <button onclick="copyPlayerId()" class="copy-btn-mini">📋</button>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Chat messages will appear here -->
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="Type a message..." maxlength="200">
+                    <button onclick="sendMessage()" class="send-btn">Send</button>
                 </div>
             </div>
 

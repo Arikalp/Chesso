@@ -30,7 +30,85 @@ auth.onAuthStateChanged((user) => {
   // Load friends and friend requests
   loadFriends();
   loadFriendRequests();
+  
+  // Initialize global chat
+  initializeGlobalChat();
 });
+
+// Global Chat System
+function initializeGlobalChat() {
+  // Listen for new chat messages
+  db.collection('globalChat')
+    .orderBy('timestamp', 'asc')
+    .limit(50)
+    .onSnapshot((snapshot) => {
+      const chatMessages = document.getElementById('chat-messages');
+      chatMessages.innerHTML = '';
+      
+      if (snapshot.empty) {
+        chatMessages.innerHTML = '<div class="empty-chat">No messages yet. Start the conversation!</div>';
+        return;
+      }
+      
+      snapshot.forEach((doc) => {
+        const message = doc.data();
+        displayChatMessage(message);
+      });
+      
+      // Scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  
+  // Add enter key listener for chat input
+  const chatInput = document.getElementById('chat-input');
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+}
+
+function displayChatMessage(message) {
+  const chatMessages = document.getElementById('chat-messages');
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `chat-message ${message.userId === currentUser.uid ? 'own' : 'other'}`;
+  
+  const time = message.timestamp ? new Date(message.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'now';
+  
+  messageDiv.innerHTML = `
+    ${message.userId !== currentUser.uid ? `<div class="message-sender">${message.userName}</div>` : ''}
+    <div class="message-text">${escapeHtml(message.text)}</div>
+    <div class="message-time">${time}</div>
+  `;
+  
+  chatMessages.appendChild(messageDiv);
+}
+
+function sendMessage() {
+  const chatInput = document.getElementById('chat-input');
+  const messageText = chatInput.value.trim();
+  
+  if (!messageText || !currentUser) return;
+  
+  // Send message to Firestore
+  db.collection('globalChat').add({
+    userId: currentUser.uid,
+    userName: currentUser.displayName || currentUser.email,
+    text: messageText,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    chatInput.value = '';
+  }).catch(error => {
+    console.error('Error sending message:', error);
+    alert('Failed to send message');
+  });
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 
 function updateUserOnlineStatus(isOnline) {
   if (currentUser) {
@@ -702,14 +780,12 @@ async function searchPlayer() {
 function copyPlayerId() {
   const playerIdText = document.getElementById('my-player-id').textContent;
   navigator.clipboard.writeText(playerIdText).then(() => {
-    const copyBtn = document.querySelector('.copy-btn');
+    const copyBtn = document.querySelector('.copy-btn-mini');
     const originalText = copyBtn.textContent;
-    copyBtn.textContent = 'Copied!';
-    copyBtn.style.background = '#28a745';
+    copyBtn.textContent = '✓';
     
     setTimeout(() => {
       copyBtn.textContent = originalText;
-      copyBtn.style.background = '#28a745';
     }, 2000);
   }).catch(() => {
     // Fallback for older browsers
@@ -719,7 +795,7 @@ function copyPlayerId() {
     textArea.select();
     document.execCommand('copy');
     document.body.removeChild(textArea);
-    alert('Player ID copied to clipboard!');
+    alert('Player ID copied!');
   });
 }
 
