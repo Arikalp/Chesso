@@ -542,3 +542,44 @@ body.dark-mode {
 .dark-mode .empty-chat {
     color: #bdc3c7;
 }
+
+.message-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.message-menu {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.chat-message.own:hover .message-menu {
+    opacity: 1;
+}
+
+.message-menu:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.dark-mode .chat-message.other .message-menu {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dark-mode .chat-message.other:hover .message-menu {
+    opacity: 1;
+}
+
+.dark-mode .message-menu:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}

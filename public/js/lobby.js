@@ -52,7 +52,7 @@ function initializeGlobalChat() {
       
       snapshot.forEach((doc) => {
         const message = doc.data();
-        displayChatMessage(message);
+        displayChatMessage(message, doc.id);
       });
       
       // Scroll to bottom
@@ -68,16 +68,22 @@ function initializeGlobalChat() {
   });
 }
 
-function displayChatMessage(message) {
+function displayChatMessage(message, messageId) {
   const chatMessages = document.getElementById('chat-messages');
   const messageDiv = document.createElement('div');
   messageDiv.className = `chat-message ${message.userId === currentUser.uid ? 'own' : 'other'}`;
   
   const time = message.timestamp ? new Date(message.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'now';
   
+  const deleteButton = message.userId === currentUser.uid ? 
+    `<button class="message-menu" onclick="deleteMessage('${messageId}')">⋯</button>` : '';
+  
   messageDiv.innerHTML = `
     ${message.userId !== currentUser.uid ? `<div class="message-sender">${message.userName}</div>` : ''}
-    <div class="message-text">${escapeHtml(message.text)}</div>
+    <div class="message-content">
+      <div class="message-text">${escapeHtml(message.text)}</div>
+      ${deleteButton}
+    </div>
     <div class="message-time">${time}</div>
   `;
   
@@ -102,6 +108,16 @@ function sendMessage() {
     console.error('Error sending message:', error);
     alert('Failed to send message');
   });
+}
+
+function deleteMessage(messageId) {
+  if (confirm('Delete this message?')) {
+    db.collection('globalChat').doc(messageId).delete()
+      .catch(error => {
+        console.error('Error deleting message:', error);
+        alert('Failed to delete message');
+      });
+  }
 }
 
 function escapeHtml(text) {
