@@ -543,6 +543,34 @@ body.dark-mode {
     color: #bdc3c7;
 }
 
+/* PWA Install Button */
+.install-btn {
+    padding: 8px 16px;
+    background: #28a745;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    margin-right: 10px;
+}
+
+.install-btn:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.dark-mode .install-btn {
+    background: #28a745;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .install-btn:hover {
+    background: #218838;
+}
+
 .message-content {
     display: flex;
     justify-content: space-between;

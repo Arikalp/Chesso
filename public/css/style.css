@@ -268,4 +268,120 @@ body.dark-mode {
 
 .dark-mode .app-footer {
     background: rgba(0, 0, 0, 0.2);
-} 
+}
+
+/* Mobile touch support */
+.piece {
+    touch-action: none;
+}
+
+.chessboard {
+    touch-action: manipulation;
+}
+
+/* Move highlighting styles */
+.square.selected {
+    background-color: #FFD700 !important;
+    box-shadow: inset 0 0 0 3px #FF8C00;
+}
+
+.square.possible-move {
+    position: relative;
+}
+
+.square.possible-move::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(0, 255, 0, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.square.possible-move:hover {
+    background-color: rgba(0, 255, 0, 0.3) !important;
+}
+
+/* Dark mode highlighting */
+.dark-mode .square.selected {
+    background-color: #FFA500 !important;
+    box-shadow: inset 0 0 0 3px #FF6347;
+}
+
+.dark-mode .square.possible-move::after {
+    background-color: rgba(144, 238, 144, 0.8);
+}
+
+.dark-mode .square.possible-move:hover {
+    background-color: rgba(144, 238, 144, 0.3) !important;
+}
+
+@media (max-width: 768px) {
+    .square {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .piece {
+        font-size: 32px;
+    }
+    
+    .square.possible-move::after {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .game-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .game-sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .player-card {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    .game-info {
+        flex: 1;
+        min-width: 200px;
+    }
+}
+
+/* PWA Install Button */
+.install-btn {
+    padding: 8px 16px;
+    background: #28a745;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    margin-right: 10px;
+}
+
+.install-btn:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.dark-mode .install-btn {
+    background: #28a745;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .install-btn:hover {
+    background: #218838;
+}

@@ -195,6 +195,9 @@ body.dark-mode {
     cursor: pointer;
     transition: all 0.3s;
     font-size: 16px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .google-btn:hover {
