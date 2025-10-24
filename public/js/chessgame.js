@@ -144,7 +144,7 @@ function updateGameUI(gameData) {
   
   // Update game status and check for game end
   try {
-    if (chess && chess.isCheckmate && chess.isCheckmate()) {
+    if (chess && chess.in_checkmate()) {
       const winner = chess.turn() === 'w' ? 'black' : 'white';
       const winnerName = winner === PlayerRole ? 'You' : (winner === 'white' ? gameData.player1?.name : gameData.player2?.name);
       gameStatus.textContent = `Checkmate! ${winnerName} wins!`;
@@ -161,28 +161,28 @@ function updateGameUI(gameData) {
       if (gameData.status === 'active') {
         updateGameResult(winner, 'checkmate');
       }
-    } else if (chess && chess.isStalemate && chess.isStalemate()) {
+    } else if (chess && chess.in_stalemate()) {
       gameStatus.textContent = 'Stalemate - Draw!';
       gameStatus.style.color = '#ffc107';
       setTimeout(() => alert('Game ended in a draw - Stalemate!'), 500);
       if (gameData.status === 'active') {
         updateGameResult('draw', 'stalemate');
       }
-    } else if (chess && chess.isThreefoldRepetition && chess.isThreefoldRepetition()) {
+    } else if (chess && chess.in_threefold_repetition()) {
       gameStatus.textContent = 'Draw - Threefold Repetition!';
       gameStatus.style.color = '#ffc107';
       setTimeout(() => alert('Game ended in a draw - Threefold Repetition!'), 500);
       if (gameData.status === 'active') {
         updateGameResult('draw', 'threefold');
       }
-    } else if (chess && chess.isInsufficientMaterial && chess.isInsufficientMaterial()) {
+    } else if (chess && chess.insufficient_material()) {
       gameStatus.textContent = 'Draw - Insufficient Material!';
       gameStatus.style.color = '#ffc107';
       setTimeout(() => alert('Game ended in a draw - Insufficient Material!'), 500);
       if (gameData.status === 'active') {
         updateGameResult('draw', 'insufficient');
       }
-    } else if (chess && chess.isCheck && chess.isCheck()) {
+    } else if (chess && chess.in_check()) {
       gameStatus.textContent = 'Check!';
       gameStatus.style.color = '#dc3545';
     } else if (gameData.status === 'finished') {
@@ -489,24 +489,24 @@ async function makeMove(move) {
     };
     
     // Check for game end conditions
-    if (testChess.isCheckmate()) {
+    if (testChess.in_checkmate()) {
       const winner = testChess.turn() === 'w' ? 'black' : 'white';
       updateData.status = 'finished';
       updateData.winner = winner;
       updateData.result = 'checkmate';
       updateData.endReason = 'checkmate';
       updateData.endedAt = firebase.firestore.FieldValue.serverTimestamp();
-    } else if (testChess.isStalemate()) {
+    } else if (testChess.in_stalemate()) {
       updateData.status = 'finished';
       updateData.result = 'draw';
       updateData.endReason = 'stalemate';
       updateData.endedAt = firebase.firestore.FieldValue.serverTimestamp();
-    } else if (testChess.isThreefoldRepetition()) {
+    } else if (testChess.in_threefold_repetition()) {
       updateData.status = 'finished';
       updateData.result = 'draw';
       updateData.endReason = 'threefold repetition';
       updateData.endedAt = firebase.firestore.FieldValue.serverTimestamp();
-    } else if (testChess.isInsufficientMaterial()) {
+    } else if (testChess.insufficient_material()) {
       updateData.status = 'finished';
       updateData.result = 'draw';
       updateData.endReason = 'insufficient material';
