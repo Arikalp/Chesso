@@ -334,6 +334,13 @@ const renderBoard = () => {
               const targetRow = parseInt(targetSquare.dataset.row);
               const targetCol = parseInt(targetSquare.dataset.col);
               
+              // Skip if dropping on same square
+              if (targetRow === sourceSquare.row && targetCol === sourceSquare.col) {
+                draggedPiece = null;
+                sourceSquare = null;
+                return;
+              }
+              
               console.log(`Touch move from ${sourceSquare.row},${sourceSquare.col} to ${targetRow},${targetCol}`);
               
               // Convert to chess notation
@@ -346,7 +353,16 @@ const renderBoard = () => {
               };
               
               console.log("Sending touch move:", move);
-              makeMove(move);
+              
+              // Validate move before sending (mobile-specific)
+              const testChess = new Chess(chess.fen());
+              const result = testChess.move(move);
+              
+              if (result) {
+                makeMove(move);
+              } else {
+                console.log('Invalid touch move:', move);
+              }
             }
             
             draggedPiece = null;
@@ -449,7 +465,6 @@ async function makeMove(move) {
     
     if (!result) {
       console.log('Invalid move attempted');
-      alert('Invalid move!');
       return;
     }
     
