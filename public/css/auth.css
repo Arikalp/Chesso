@@ -209,3 +209,34 @@ body.dark-mode {
     width: 20px;
     height: 20px;
 }
+
+/* Password toggle styles */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    flex: 1;
+    padding-right: 45px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    z-index: 1;
+}
+
+.toggle-password:hover {
+    opacity: 0.7;
+}
+
+.dark-mode .toggle-password {
+    color: white;
+}

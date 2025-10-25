@@ -83,3 +83,16 @@ async function signInWithGoogle() {
     alert('Google sign-in failed: ' + error.message);
   }
 }
+
+function togglePassword(inputId) {
+  const passwordInput = document.getElementById(inputId);
+  const toggleButton = passwordInput.nextElementSibling;
+  
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    toggleButton.textContent = '🙈';
+  } else {
+    passwordInput.type = 'password';
+    toggleButton.textContent = '👁️';
+  }
+}
