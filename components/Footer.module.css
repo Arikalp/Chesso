@@ -7,6 +7,23 @@
   font-size: 14px;
 }
 
+.gradientLink {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+  text-decoration: none;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  display: inline-block;
+}
+
+.gradientLink:hover {
+  transform: translateY(-1px) scale(1.05);
+  filter: brightness(1.2);
+}
+
 :global(.dark-mode) .footer {
   background: rgba(0, 0, 0, 0.2);
   color: white;

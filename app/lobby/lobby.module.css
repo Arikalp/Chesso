@@ -244,10 +244,11 @@
 }
 
 .chatMessage.own {
-    background: #667eea;
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
     color: white;
     align-self: flex-end;
     margin-left: auto;
+    border-bottom-right-radius: 2px;
 }
 
 .chatMessage.other {
@@ -255,6 +256,7 @@
     color: #333;
     border: 1px solid #e0e0e0;
     align-self: flex-start;
+    border-bottom-left-radius: 2px;
 }
 
 .messageSender {
@@ -278,24 +280,22 @@
 }
 
 .messageMenu {
-    background: none;
+    background: rgba(0, 0, 0, 0.1);
     border: none;
-    color: rgba(255, 255, 255, 0.7);
+    color: white;
     cursor: pointer;
     font-size: 16px;
-    padding: 2px 4px;
-    border-radius: 3px;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.own:hover .messageMenu {
-    opacity: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .messageMenu:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
+    background: rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
 }
 
 .chatInputContainer {
