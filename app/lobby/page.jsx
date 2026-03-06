@@ -22,6 +22,8 @@ import {
 import { auth, db } from "@/lib/firebase";
 import { useAuth } from "@/components/AuthProvider";
 import { useTheme } from "@/components/ThemeProvider";
+import { useToast } from "@/components/Toast";
+import ConfirmModal from "@/components/ConfirmModal";
 import Footer from "@/components/Footer";
 import styles from "./lobby.module.css";
 
@@ -48,6 +50,7 @@ export default function LobbyPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const toast = useToast();
 
   const [players, setPlayers] = useState([]);
   const [friends, setFriends] = useState([]);
@@ -62,6 +65,40 @@ export default function LobbyPage() {
   const [isSearching, setIsSearching] = useState(false);
   const [friendshipStatuses, setFriendshipStatuses] = useState({});
   const chatRef = useRef(null);
+  const seenInviteIds = useRef(new Set());
+  const seenNotifIds = useRef(new Set());
+
+  // Confirm modal state
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmText: "Confirm",
+    cancelText: "Cancel",
+    variant: "default",
+    onConfirm: () => {},
+  });
+
+  function showConfirm(opts) {
+    return new Promise((resolve) => {
+      setConfirmModal({
+        isOpen: true,
+        title: opts.title || "Confirm",
+        message: opts.message || "",
+        confirmText: opts.confirmText || "Confirm",
+        cancelText: opts.cancelText || "Cancel",
+        variant: opts.variant || "default",
+        onConfirm: () => {
+          setConfirmModal((p) => ({ ...p, isOpen: false }));
+          resolve(true);
+        },
+      });
+    });
+  }
+
+  function closeConfirm() {
+    setConfirmModal((p) => ({ ...p, isOpen: false }));
+  }
 
   // Redirect if not logged in
   useEffect(() => {
@@ -127,7 +164,6 @@ export default function LobbyPage() {
 
     updateUserOnlineStatus(true);
 
-    // Load online players
     const playersQ = query(
       collection(db, "users"),
       where("isOnline", "==", true)
@@ -147,7 +183,6 @@ export default function LobbyPage() {
       setFriendshipStatuses((prev) => ({ ...prev, ...statusMap }));
     });
 
-    // Listen for invitations
     const invitesQ = query(
       collection(db, "gameInvites"),
       where("toUserId", "==", user.uid),
@@ -155,32 +190,49 @@ export default function LobbyPage() {
     );
     const unsubInvites = onSnapshot(invitesQ, (snapshot) => {
       const inviteList = [];
-      snapshot.forEach((d) => inviteList.push({ id: d.id, ...d.data() }));
+      let newCount = 0;
+      snapshot.forEach((d) => {
+        inviteList.push({ id: d.id, ...d.data() });
+        if (!seenInviteIds.current.has(d.id)) {
+          seenInviteIds.current.add(d.id);
+          newCount++;
+        }
+      });
       setInvites(inviteList);
+      if (newCount > 0) {
+        toast.info(`You have ${newCount} new game invitation${newCount > 1 ? "s" : ""}!`);
+      }
     });
 
-    // Listen for game notifications
     const notifQ = query(
       collection(db, "gameNotifications"),
       where("userId", "==", user.uid),
       where("read", "==", false)
     );
     const unsubNotifs = onSnapshot(notifQ, (snapshot) => {
-      snapshot.forEach((d) => {
+      snapshot.forEach(async (d) => {
+        if (seenNotifIds.current.has(d.id)) return;
+        seenNotifIds.current.add(d.id);
         const notification = d.data();
         if (
           notification.type === "gameReady" ||
           notification.type === "quickMatchFound"
         ) {
-          updateDoc(doc(db, "gameNotifications", d.id), { read: true });
-          if (confirm(notification.message + " Click OK to join the game.")) {
+          await updateDoc(doc(db, "gameNotifications", d.id), { read: true });
+          const confirmed = await showConfirm({
+            title: "🎮 Game Ready!",
+            message: notification.message,
+            confirmText: "Join Game",
+            cancelText: "Later",
+            variant: "success",
+          });
+          if (confirmed) {
             router.push(`/game/${notification.gameRoomId}`);
           }
         }
       });
     });
 
-    // Load friends
     const friendsQ = query(
       collection(db, "friendships"),
       where("users", "array-contains", user.uid),
@@ -204,7 +256,6 @@ export default function LobbyPage() {
       setFriends(friendList);
     });
 
-    // Load friend requests
     const reqQ = query(
       collection(db, "friendships"),
       where("receiverId", "==", user.uid),
@@ -216,7 +267,6 @@ export default function LobbyPage() {
       setFriendRequests(reqList);
     });
 
-    // Global chat
     const chatQ = query(
       collection(db, "globalChat"),
       orderBy("timestamp", "asc"),
@@ -228,7 +278,6 @@ export default function LobbyPage() {
       setChatMessages(msgs);
     });
 
-    // Cleanup matchmaking queue
     const cleanupMatchmaking = async () => {
       try {
         const mmQ = query(
@@ -245,7 +294,6 @@ export default function LobbyPage() {
     };
     cleanupMatchmaking();
 
-    // Handle page unload
     const handleUnload = () => {
       updateUserOnlineStatus(false);
     };
@@ -260,7 +308,7 @@ export default function LobbyPage() {
       unsubChat();
       window.removeEventListener("beforeunload", handleUnload);
     };
-  }, [user, updateUserOnlineStatus, getFriendshipStatus, router]);
+  }, [user, updateUserOnlineStatus, getFriendshipStatus, router, toast]);
 
   // Auto-scroll chat
   useEffect(() => {
@@ -282,16 +330,23 @@ export default function LobbyPage() {
       });
       setChatInput("");
     } catch (error) {
-      alert("Failed to send message");
+      toast.error("Failed to send message. Please try again.");
     }
   }
 
   async function deleteMessage(messageId) {
-    if (confirm("Delete this message?")) {
+    const confirmed = await showConfirm({
+      title: "Delete Message",
+      message: "Are you sure you want to delete this message?",
+      confirmText: "Delete",
+      variant: "danger",
+    });
+    if (confirmed) {
       try {
         await deleteDoc(doc(db, "globalChat", messageId));
+        toast.success("Message deleted");
       } catch (error) {
-        alert("Failed to delete message");
+        toast.error("Failed to delete message");
       }
     }
   }
@@ -306,9 +361,9 @@ export default function LobbyPage() {
         status: "pending",
         createdAt: serverTimestamp(),
       });
-      alert(`Invitation sent to ${toUserName}!`);
+      toast.success(`Invitation sent to ${toUserName}!`);
     } catch (error) {
-      alert("Failed to send invitation: " + error.message);
+      toast.error("Failed to send invitation. Please try again.");
     }
   }
 
@@ -340,23 +395,26 @@ export default function LobbyPage() {
         read: false,
       });
 
+      toast.success("Game started! Redirecting...");
       router.push(`/game/${gameRoom.id}`);
     } catch (error) {
-      alert("Failed to accept invitation: " + error.message);
+      toast.error("Failed to accept invitation. Please try again.");
     }
   }
 
   async function declineInvite(inviteId) {
     try {
       await updateDoc(doc(db, "gameInvites", inviteId), { status: "declined" });
+      toast.info("Invitation declined");
     } catch (error) {
-      alert("Failed to decline invitation: " + error.message);
+      toast.error("Failed to decline invitation");
     }
   }
 
   async function findQuickMatch() {
     try {
       setIsSearching(true);
+      toast.info("Searching for an opponent...");
 
       const waitingQ = query(
         collection(db, "matchmaking"),
@@ -393,6 +451,7 @@ export default function LobbyPage() {
           read: false,
         });
 
+        toast.success("Opponent found! Starting game...");
         router.push(`/game/${gameRoom.id}`);
       } else {
         await addDoc(collection(db, "matchmaking"), {
@@ -401,9 +460,10 @@ export default function LobbyPage() {
           status: "waiting",
           createdAt: serverTimestamp(),
         });
+        toast.info("Added to matchmaking queue. Waiting for an opponent...");
       }
     } catch (error) {
-      alert("Failed to find match: " + error.message);
+      toast.error("Matchmaking failed. Please try again.");
       setIsSearching(false);
     }
   }
@@ -419,6 +479,7 @@ export default function LobbyPage() {
         await deleteDoc(doc(db, "matchmaking", d.id));
       }
       setIsSearching(false);
+      toast.info("Search cancelled");
     } catch (error) {
       console.error("Cancel match error:", error);
     }
@@ -434,16 +495,16 @@ export default function LobbyPage() {
         fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
       });
       const code = gameRoom.id.substring(0, 6).toUpperCase();
-      alert(`Game room created! Room code: ${code}`);
+      toast.success(`Room created! Code: ${code}`);
       router.push(`/game/${gameRoom.id}`);
     } catch (error) {
-      alert("Failed to create game: " + error.message);
+      toast.error("Failed to create game room. Please try again.");
     }
   }
 
   async function joinGame() {
     if (!roomCode.trim()) {
-      alert("Please enter a room code");
+      toast.warning("Please enter a room code");
       return;
     }
     try {
@@ -460,7 +521,7 @@ export default function LobbyPage() {
       });
 
       if (!found) {
-        alert("Game room not found or already full");
+        toast.error("Game room not found or already full");
         return;
       }
 
@@ -470,9 +531,10 @@ export default function LobbyPage() {
         gameStartedAt: serverTimestamp(),
       });
 
+      toast.success("Joined game! Starting...");
       router.push(`/game/${found.id}`);
     } catch (error) {
-      alert("Failed to join game: " + error.message);
+      toast.error("Failed to join game. Please try again.");
     }
   }
 
@@ -488,7 +550,7 @@ export default function LobbyPage() {
         if (d.data().users.includes(toUserId)) exists = true;
       });
       if (exists) {
-        alert("Friendship already exists or request already sent!");
+        toast.warning("Friend request already sent or you're already friends!");
         return;
       }
 
@@ -501,9 +563,9 @@ export default function LobbyPage() {
         status: "pending",
         createdAt: serverTimestamp(),
       });
-      alert(`Friend request sent to ${toUserName}!`);
+      toast.success(`Friend request sent to ${toUserName}!`);
     } catch (error) {
-      alert("Failed to send friend request: " + error.message);
+      toast.error("Failed to send friend request. Please try again.");
     }
   }
 
@@ -511,30 +573,32 @@ export default function LobbyPage() {
     try {
       const reqDoc = await getDoc(doc(db, "friendships", requestId));
       if (!reqDoc.exists() || reqDoc.data().status !== "pending") {
-        alert("Friend request no longer valid!");
+        toast.warning("This friend request is no longer valid");
         return;
       }
       await updateDoc(doc(db, "friendships", requestId), {
         status: "accepted",
         acceptedAt: serverTimestamp(),
       });
+      toast.success("Friend request accepted!");
     } catch (error) {
-      alert("Failed to accept friend request: " + error.message);
+      toast.error("Failed to accept friend request");
     }
   }
 
   async function declineFriendRequest(requestId) {
     try {
       await deleteDoc(doc(db, "friendships", requestId));
+      toast.info("Friend request declined");
     } catch (error) {
-      alert("Failed to decline friend request: " + error.message);
+      toast.error("Failed to decline friend request");
     }
   }
 
   async function searchPlayer() {
     const playerId = playerSearch.trim().replace("#", "").toUpperCase();
     if (!playerId) {
-      alert("Please enter a Player ID");
+      toast.warning("Please enter a Player ID");
       return;
     }
     try {
@@ -544,7 +608,7 @@ export default function LobbyPage() {
       );
       const snapshot = await getDocs(q);
       if (snapshot.empty) {
-        alert("Player not found!");
+        toast.error("Player not found. Double-check the Player ID.");
         return;
       }
       const playerDoc = snapshot.docs[0];
@@ -552,45 +616,72 @@ export default function LobbyPage() {
       const playerUid = playerDoc.id;
 
       if (playerUid === user.uid) {
-        alert("This is your own Player ID!");
+        toast.info("That's your own Player ID!");
         return;
       }
 
       const status = await getFriendshipStatus(playerUid);
-      let message = `Player found: ${playerData.name}\nPlayer ID: #${playerData.playerId}\n\n`;
 
       if (status === "friends") {
-        message += "You are already friends! Click OK to send game invite.";
-        if (confirm(message)) await sendGameInvite(playerUid, playerData.name);
+        const confirmed = await showConfirm({
+          title: `Player Found: ${playerData.name}`,
+          message: `You are already friends!\nWould you like to invite them to a game?`,
+          confirmText: "Send Invite",
+          variant: "success",
+        });
+        if (confirmed) await sendGameInvite(playerUid, playerData.name);
       } else if (status === "pending-sent") {
-        message += "Friend request already sent! Click OK to send game invite.";
-        if (confirm(message)) await sendGameInvite(playerUid, playerData.name);
+        const confirmed = await showConfirm({
+          title: `Player Found: ${playerData.name}`,
+          message: `Friend request already sent.\nWould you like to invite them to a game?`,
+          confirmText: "Send Invite",
+        });
+        if (confirmed) await sendGameInvite(playerUid, playerData.name);
       } else if (status === "pending-received") {
-        alert(message + "This player sent you a friend request! Check your Friend Requests tab.");
+        toast.info(`${playerData.name} already sent you a friend request! Check your Friend Requests tab.`);
       } else {
-        message += "Click OK to send friend request, Cancel to send game invite.";
-        if (confirm(message)) await sendFriendRequest(playerUid, playerData.name);
-        else await sendGameInvite(playerUid, playerData.name);
+        const confirmed = await showConfirm({
+          title: `Player Found: ${playerData.name}`,
+          message: `Player ID: #${playerData.playerId}\n\nWould you like to send a friend request?`,
+          confirmText: "Add Friend",
+          cancelText: "Send Game Invite",
+          variant: "success",
+        });
+        if (confirmed) {
+          await sendFriendRequest(playerUid, playerData.name);
+        } else {
+          await sendGameInvite(playerUid, playerData.name);
+        }
       }
       setPlayerSearch("");
     } catch (error) {
-      alert("Search failed: " + error.message);
+      toast.error("Search failed. Please try again.");
     }
   }
 
   function copyPlayerId() {
     navigator.clipboard.writeText(myPlayerId).then(() => {
-      alert("Player ID copied!");
+      toast.success("Player ID copied to clipboard!");
+    }).catch(() => {
+      toast.info(`Your Player ID is: ${myPlayerId}`);
     });
   }
 
   async function handleLogout() {
+    const confirmed = await showConfirm({
+      title: "Logout",
+      message: "Are you sure you want to logout?",
+      confirmText: "Logout",
+      variant: "danger",
+    });
+    if (!confirmed) return;
+
     try {
       await updateUserOnlineStatus(false);
       await signOut(auth);
       router.push("/auth");
     } catch (error) {
-      alert("Logout failed: " + error.message);
+      toast.error("Logout failed. Please try again.");
     }
   }
 
@@ -604,6 +695,17 @@ export default function LobbyPage() {
 
   return (
     <>
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        cancelText={confirmModal.cancelText}
+        variant={confirmModal.variant}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={closeConfirm}
+      />
+
       <div className={styles.lobbyContainer}>
         <header className={styles.lobbyHeader}>
           <h1>♔ Chesso ♛</h1>
@@ -768,110 +870,122 @@ export default function LobbyPage() {
 
             {activeTab === "players" && (
               <div className={styles.tabContent}>
-                {players.map((player) => (
-                  <div key={player.id} className={styles.playerItem}>
-                    <div>
-                      <div className={styles.playerName}>{player.name}</div>
-                      <div className={styles.playerStatus}>
-                        Online • ID: #{player.playerId || "N/A"}
+                {players.length === 0 ? (
+                  <div className={styles.emptyChat}>No other players online</div>
+                ) : (
+                  players.map((player) => (
+                    <div key={player.id} className={styles.playerItem}>
+                      <div>
+                        <div className={styles.playerName}>{player.name}</div>
+                        <div className={styles.playerStatus}>
+                          Online • ID: #{player.playerId || "N/A"}
+                        </div>
+                      </div>
+                      <div>
+                        <button
+                          className={styles.inviteBtn}
+                          onClick={() =>
+                            sendGameInvite(player.id, player.name)
+                          }
+                        >
+                          Invite to Play
+                        </button>
+                        {friendshipStatuses[player.id] === "none" && (
+                          <button
+                            className={styles.friendBtn}
+                            onClick={() =>
+                              sendFriendRequest(player.id, player.name)
+                            }
+                          >
+                            Add Friend
+                          </button>
+                        )}
+                        {friendshipStatuses[player.id] === "pending-sent" && (
+                          <button className={`${styles.friendBtn} ${styles.pending}`} disabled>
+                            Request Sent
+                          </button>
+                        )}
+                        {friendshipStatuses[player.id] === "pending-received" && (
+                          <button
+                            className={styles.friendBtn}
+                            onClick={() =>
+                              acceptFriendRequestById(player.id)
+                            }
+                          >
+                            Accept
+                          </button>
+                        )}
+                        {friendshipStatuses[player.id] === "friends" && (
+                          <button className={styles.friendBtn} disabled>
+                            Friends
+                          </button>
+                        )}
                       </div>
                     </div>
-                    <div>
-                      <button
-                        className={styles.inviteBtn}
-                        onClick={() =>
-                          sendGameInvite(player.id, player.name)
-                        }
-                      >
-                        Invite to Play
-                      </button>
-                      {friendshipStatuses[player.id] === "none" && (
-                        <button
-                          className={styles.friendBtn}
-                          onClick={() =>
-                            sendFriendRequest(player.id, player.name)
-                          }
-                        >
-                          Add Friend
-                        </button>
-                      )}
-                      {friendshipStatuses[player.id] === "pending-sent" && (
-                        <button className={`${styles.friendBtn} ${styles.pending}`} disabled>
-                          Request Sent
-                        </button>
-                      )}
-                      {friendshipStatuses[player.id] === "pending-received" && (
-                        <button
-                          className={styles.friendBtn}
-                          onClick={() =>
-                            acceptFriendRequestById(player.id)
-                          }
-                        >
-                          Accept
-                        </button>
-                      )}
-                      {friendshipStatuses[player.id] === "friends" && (
-                        <button className={styles.friendBtn} disabled>
-                          Friends
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             )}
 
             {activeTab === "friends" && (
               <div className={styles.tabContent}>
-                {friends.map((friend) => (
-                  <div key={friend.id} className={styles.playerItem}>
-                    <div>
-                      <div className={styles.playerName}>{friend.name}</div>
-                      <div className={styles.playerStatus}>Friend</div>
+                {friends.length === 0 ? (
+                  <div className={styles.emptyChat}>No friends yet. Add some!</div>
+                ) : (
+                  friends.map((friend) => (
+                    <div key={friend.id} className={styles.playerItem}>
+                      <div>
+                        <div className={styles.playerName}>{friend.name}</div>
+                        <div className={styles.playerStatus}>Friend</div>
+                      </div>
+                      <div>
+                        <button
+                          className={styles.inviteBtn}
+                          onClick={() =>
+                            sendGameInvite(friend.id, friend.name)
+                          }
+                        >
+                          Invite to Play
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      <button
-                        className={styles.inviteBtn}
-                        onClick={() =>
-                          sendGameInvite(friend.id, friend.name)
-                        }
-                      >
-                        Invite to Play
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             )}
 
             {activeTab === "requests" && (
               <div className={styles.tabContent}>
-                {friendRequests.map((req) => (
-                  <div key={req.id} className={styles.playerItem}>
-                    <div>
-                      <div className={styles.playerName}>
-                        {req.requesterName}
+                {friendRequests.length === 0 ? (
+                  <div className={styles.emptyChat}>No pending requests</div>
+                ) : (
+                  friendRequests.map((req) => (
+                    <div key={req.id} className={styles.playerItem}>
+                      <div>
+                        <div className={styles.playerName}>
+                          {req.requesterName}
+                        </div>
+                        <div className={styles.playerStatus}>
+                          wants to be friends
+                        </div>
                       </div>
-                      <div className={styles.playerStatus}>
-                        wants to be friends
+                      <div>
+                        <button
+                          className={styles.acceptBtn}
+                          onClick={() => acceptFriendRequestById(req.id)}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className={styles.declineBtn}
+                          onClick={() => declineFriendRequest(req.id)}
+                        >
+                          Decline
+                        </button>
                       </div>
                     </div>
-                    <div>
-                      <button
-                        className={styles.acceptBtn}
-                        onClick={() => acceptFriendRequestById(req.id)}
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className={styles.declineBtn}
-                        onClick={() => declineFriendRequest(req.id)}
-                      >
-                        Decline
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             )}
           </div>
@@ -880,32 +994,36 @@ export default function LobbyPage() {
           <div className={styles.gameInvites}>
             <h3>Game Invitations</h3>
             <div className={styles.invitesList}>
-              {invites.map((invite) => (
-                <div key={invite.id} className={styles.inviteItem}>
-                  <div>
-                    <div className={styles.playerName}>
-                      {invite.fromUserName}
+              {invites.length === 0 ? (
+                <div className={styles.emptyChat}>No pending invitations</div>
+              ) : (
+                invites.map((invite) => (
+                  <div key={invite.id} className={styles.inviteItem}>
+                    <div>
+                      <div className={styles.playerName}>
+                        {invite.fromUserName}
+                      </div>
+                      <div className={styles.playerStatus}>
+                        wants to play chess
+                      </div>
                     </div>
-                    <div className={styles.playerStatus}>
-                      wants to play chess
+                    <div>
+                      <button
+                        className={styles.acceptBtn}
+                        onClick={() => acceptInvite(invite.id)}
+                      >
+                        Accept
+                      </button>
+                      <button
+                        className={styles.declineBtn}
+                        onClick={() => declineInvite(invite.id)}
+                      >
+                        Decline
+                      </button>
                     </div>
                   </div>
-                  <div>
-                    <button
-                      className={styles.acceptBtn}
-                      onClick={() => acceptInvite(invite.id)}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className={styles.declineBtn}
-                      onClick={() => declineInvite(invite.id)}
-                    >
-                      Decline
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -13,6 +13,7 @@ import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { useAuth } from "@/components/AuthProvider";
 import { useTheme } from "@/components/ThemeProvider";
+import { useToast } from "@/components/Toast";
 import Footer from "@/components/Footer";
 import styles from "./auth.module.css";
 
@@ -20,6 +21,7 @@ export default function AuthPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const toast = useToast();
   const [activeTab, setActiveTab] = useState("login");
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -28,6 +30,7 @@ export default function AuthPage() {
   const [signupPassword, setSignupPassword] = useState("");
   const [showLoginPw, setShowLoginPw] = useState(false);
   const [showSignupPw, setShowSignupPw] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!loading && user) {
@@ -37,22 +40,32 @@ export default function AuthPage() {
 
   async function handleLogin() {
     if (!loginEmail || !loginPassword) {
-      alert("Please fill in all fields");
+      toast.warning("Please fill in all fields");
       return;
     }
+    setIsSubmitting(true);
     try {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      toast.success("Welcome back!");
       router.push("/lobby");
     } catch (error) {
-      alert("Login failed: " + error.message);
+      const msg = getFriendlyError(error.code);
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   async function handleSignup() {
     if (!signupName || !signupEmail || !signupPassword) {
-      alert("Please fill in all fields");
+      toast.warning("Please fill in all fields");
       return;
     }
+    if (signupPassword.length < 6) {
+      toast.warning("Password must be at least 6 characters");
+      return;
+    }
+    setIsSubmitting(true);
     try {
       const result = await createUserWithEmailAndPassword(
         auth,
@@ -68,14 +81,19 @@ export default function AuthPage() {
         isOnline: true,
       });
 
+      toast.success("Account created successfully!");
       router.push("/lobby");
     } catch (error) {
-      alert("Signup failed: " + error.message);
+      const msg = getFriendlyError(error.code);
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   async function handleGoogleSignIn() {
     const provider = new GoogleAuthProvider();
+    setIsSubmitting(true);
     try {
       const result = await signInWithPopup(auth, provider);
       await setDoc(
@@ -88,10 +106,31 @@ export default function AuthPage() {
         },
         { merge: true }
       );
+      toast.success(`Welcome, ${result.user.displayName}!`);
       router.push("/lobby");
     } catch (error) {
-      alert("Google sign-in failed: " + error.message);
+      if (error.code !== "auth/popup-closed-by-user") {
+        const msg = getFriendlyError(error.code);
+        toast.error(msg);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
+  }
+
+  function getFriendlyError(code) {
+    const errorMap = {
+      "auth/email-already-in-use": "This email is already registered. Try logging in instead.",
+      "auth/invalid-email": "Please enter a valid email address.",
+      "auth/user-not-found": "No account found with this email.",
+      "auth/wrong-password": "Incorrect password. Please try again.",
+      "auth/invalid-credential": "Invalid email or password. Please try again.",
+      "auth/too-many-requests": "Too many attempts. Please wait a moment and try again.",
+      "auth/weak-password": "Password is too weak. Use at least 6 characters.",
+      "auth/network-request-failed": "Network error. Check your internet connection.",
+      "auth/popup-blocked": "Pop-up blocked. Please allow pop-ups for this site.",
+    };
+    return errorMap[code] || "Something went wrong. Please try again.";
   }
 
   if (loading || user) {
@@ -139,6 +178,7 @@ export default function AuthPage() {
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                disabled={isSubmitting}
               />
               <div className={styles.passwordContainer}>
                 <input
@@ -147,6 +187,7 @@ export default function AuthPage() {
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                  disabled={isSubmitting}
                 />
                 <button
                   type="button"
@@ -156,7 +197,9 @@ export default function AuthPage() {
                   {showLoginPw ? "🙈" : "👁️"}
                 </button>
               </div>
-              <button onClick={handleLogin}>Login</button>
+              <button onClick={handleLogin} disabled={isSubmitting}>
+                {isSubmitting ? "Logging in..." : "Login"}
+              </button>
             </div>
           )}
 
@@ -167,12 +210,14 @@ export default function AuthPage() {
                 placeholder="Display Name"
                 value={signupName}
                 onChange={(e) => setSignupName(e.target.value)}
+                disabled={isSubmitting}
               />
               <input
                 type="email"
                 placeholder="Email"
                 value={signupEmail}
                 onChange={(e) => setSignupEmail(e.target.value)}
+                disabled={isSubmitting}
               />
               <div className={styles.passwordContainer}>
                 <input
@@ -181,6 +226,7 @@ export default function AuthPage() {
                   value={signupPassword}
                   onChange={(e) => setSignupPassword(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSignup()}
+                  disabled={isSubmitting}
                 />
                 <button
                   type="button"
@@ -190,7 +236,9 @@ export default function AuthPage() {
                   {showSignupPw ? "🙈" : "👁️"}
                 </button>
               </div>
-              <button onClick={handleSignup}>Sign Up</button>
+              <button onClick={handleSignup} disabled={isSubmitting}>
+                {isSubmitting ? "Creating account..." : "Sign Up"}
+              </button>
             </div>
           )}
 
@@ -198,7 +246,11 @@ export default function AuthPage() {
             <span>or</span>
           </div>
 
-          <button className={styles.googleBtn} onClick={handleGoogleSignIn}>
+          <button
+            className={styles.googleBtn}
+            onClick={handleGoogleSignIn}
+            disabled={isSubmitting}
+          >
             <img
               src="https://developers.google.com/identity/images/g-logo.png"
               alt="Google"

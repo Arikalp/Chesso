@@ -12,6 +12,7 @@ import {
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/components/AuthProvider";
 import { useTheme } from "@/components/ThemeProvider";
+import { useToast } from "@/components/Toast";
 import Footer from "@/components/Footer";
 import styles from "../game.module.css";
 
@@ -21,6 +22,7 @@ export default function GamePage() {
   const roomId = params.roomId;
   const { user, loading } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const toast = useToast();
 
   const chessRef = useRef(new Chess());
   const [board, setBoard] = useState([]);
@@ -36,6 +38,7 @@ export default function GamePage() {
   const dragState = useRef({ piece: null, source: null });
   const gameStartTimeRef = useRef(null);
   const timerIntervalRef = useRef(null);
+  const hasAnnouncedResult = useRef(false);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -132,18 +135,38 @@ export default function GamePage() {
           if (gameData.status === "active") {
             updateGameResult(winner, "checkmate");
           }
+          if (!hasAnnouncedResult.current) {
+            hasAnnouncedResult.current = true;
+            if (winner === role) {
+              toast.success("🎉 Checkmate! You win!");
+            } else {
+              toast.error("😔 Checkmate! You lose.");
+            }
+          }
         } else if (chess.isStalemate()) {
           setGameStatus("Stalemate - Draw!");
           setGameStatusColor("#ffc107");
           if (gameData.status === "active") updateGameResult("draw", "stalemate");
+          if (!hasAnnouncedResult.current) {
+            hasAnnouncedResult.current = true;
+            toast.warning("Game ended in stalemate — it's a draw!");
+          }
         } else if (chess.isThreefoldRepetition()) {
           setGameStatus("Draw - Threefold Repetition!");
           setGameStatusColor("#ffc107");
           if (gameData.status === "active") updateGameResult("draw", "threefold");
+          if (!hasAnnouncedResult.current) {
+            hasAnnouncedResult.current = true;
+            toast.warning("Threefold repetition — it's a draw!");
+          }
         } else if (chess.isInsufficientMaterial()) {
           setGameStatus("Draw - Insufficient Material!");
           setGameStatusColor("#ffc107");
           if (gameData.status === "active") updateGameResult("draw", "insufficient");
+          if (!hasAnnouncedResult.current) {
+            hasAnnouncedResult.current = true;
+            toast.warning("Insufficient material — it's a draw!");
+          }
         } else if (chess.isCheck()) {
           setGameStatus("Check!");
           setGameStatusColor("#dc3545");
@@ -160,6 +183,16 @@ export default function GamePage() {
                   : gameData.player2?.name;
             setGameStatus(`${winnerName} wins!`);
             setGameStatusColor(gameData.winner === role ? "#28a745" : "#dc3545");
+          }
+          if (!hasAnnouncedResult.current) {
+            hasAnnouncedResult.current = true;
+            if (gameData.result === "draw") {
+              toast.warning("Game ended in a draw!");
+            } else if (gameData.winner === role) {
+              toast.success("🎉 You win!");
+            } else {
+              toast.error("😔 You lose.");
+            }
           }
         } else if (
           gameData.status === "active" &&
@@ -189,7 +222,7 @@ export default function GamePage() {
       // Update board
       setBoard(chess.board());
     },
-    [user, startGameTimer]
+    [user, startGameTimer, toast]
   );
 
   // Listen for game updates
@@ -206,12 +239,13 @@ export default function GamePage() {
           }
           setTimeout(() => updateGameUI(gameData), 100);
         } else {
-          alert("Game room not found!");
+          toast.error("Game room not found!");
           router.push("/lobby");
         }
       },
       (error) => {
         console.error("Error listening to game updates:", error);
+        toast.error("Connection error. Trying to reconnect...");
       }
     );
 
@@ -219,7 +253,7 @@ export default function GamePage() {
       unsubscribe();
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     };
-  }, [user, roomId, updateGameUI, router]);
+  }, [user, roomId, updateGameUI, router, toast]);
 
   // Make move
   async function makeMove(move) {
@@ -228,15 +262,18 @@ export default function GamePage() {
       setSelectedSquare(null);
       setHighlightedMoves([]);
 
-      const testChess = new Chess(chess.fen());
-      const result = testChess.move(move);
-      if (!result) return;
-
       const isPlayerTurn =
         (chess.turn() === "w" && playerRole === "white") ||
         (chess.turn() === "b" && playerRole === "black");
       if (!isPlayerTurn) {
-        alert("It's not your turn!");
+        toast.warning("It's not your turn!");
+        return;
+      }
+
+      const testChess = new Chess(chess.fen());
+      const result = testChess.move(move);
+      if (!result) {
+        toast.warning("Invalid move");
         return;
       }
 
@@ -282,7 +319,7 @@ export default function GamePage() {
       await updateDoc(doc(db, "gameRooms", roomId), updateData);
     } catch (error) {
       console.error("Error making move:", error);
-      alert("Failed to make move: " + error.message);
+      toast.error("Failed to make move. Please try again.");
     }
   }
 
@@ -323,7 +360,6 @@ export default function GamePage() {
     const chess = chessRef.current;
 
     if (selectedSquare) {
-      // Attempt move
       const fromSquare = `${String.fromCharCode(97 + selectedSquare.col)}${8 - selectedSquare.row}`;
       const toSquare = `${String.fromCharCode(97 + col)}${8 - row}`;
       makeMove({ from: fromSquare, to: toSquare });
@@ -339,6 +375,10 @@ export default function GamePage() {
       if (isPlayerPiece && playerRole !== "spectator") {
         const sq = `${String.fromCharCode(97 + col)}${8 - row}`;
         const moves = chess.moves({ square: sq, verbose: true });
+        if (moves.length === 0) {
+          toast.info("This piece has no legal moves");
+          return;
+        }
         setSelectedSquare({ row, col });
         setHighlightedMoves(
           moves.map((m) => ({
@@ -346,6 +386,8 @@ export default function GamePage() {
             col: m.to.charCodeAt(0) - 97,
           }))
         );
+      } else if (playerRole === "spectator") {
+        toast.info("You are spectating this game");
       }
     }
   }
@@ -394,6 +436,8 @@ export default function GamePage() {
       const testChess = new Chess(chessRef.current.fen());
       if (testChess.move({ from: fromSq, to: toSq })) {
         makeMove({ from: fromSq, to: toSq });
+      } else {
+        toast.warning("Invalid move");
       }
     }
     dragState.current = { piece: null, source: null };

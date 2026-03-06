@@ -1,0 +1,143 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.headerIcon {
+    font-size: 22px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+.message {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    white-space: pre-line;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.cancelBtn,
+.confirmBtn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cancelBtn {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.cancelBtn:hover {
+    background: #e2e8f0;
+}
+
+.confirmBtn {
+    background: #667eea;
+    color: white;
+}
+
+.confirmBtn:hover {
+    background: #5a6fd8;
+    transform: translateY(-1px);
+}
+
+.confirmBtn.danger {
+    background: #ef4444;
+}
+
+.confirmBtn.danger:hover {
+    background: #dc2626;
+}
+
+.confirmBtn.successBtn {
+    background: #10b981;
+}
+
+.confirmBtn.successBtn:hover {
+    background: #059669;
+}
+
+/* Dark mode */
+:global(.dark-mode) .modal {
+    background: #1e293b;
+}
+
+:global(.dark-mode) .title {
+    color: white;
+}
+
+:global(.dark-mode) .message {
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .cancelBtn {
+    background: #334155;
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .cancelBtn:hover {
+    background: #475569;
+}
