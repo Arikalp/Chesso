@@ -493,7 +493,7 @@ export default function GamePage() {
   const isBlackPlayer = playerRole === "black";
 
   return (
-    <>
+    <main>
       <div className={styles.gameHeader}>
         <h2>♔ Chesso ♛</h2>
         <div className={styles.gameControls}>
@@ -604,6 +604,6 @@ export default function GamePage() {
         </div>
       </div>
       <Footer />
-    </>
+    </main>
   );
 }

@@ -697,7 +697,7 @@ export default function LobbyPage() {
   }
 
   return (
-    <>
+    <main>
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         title={confirmModal.title}
@@ -1075,6 +1075,6 @@ export default function LobbyPage() {
         </div>
       </div>
       <Footer />
-    </>
+    </main>
   );
 }

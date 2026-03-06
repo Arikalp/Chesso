@@ -78,7 +78,9 @@
 }
 
 .optionCard {
-    background: white;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 30px;
     border-radius: 15px;
     text-align: center;
@@ -181,7 +183,9 @@
 }
 
 .chatSection {
-    background: white;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
@@ -342,7 +346,9 @@
 
 /* Social Section */
 .socialSection {
-    background: white;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -460,7 +466,9 @@
 
 /* Game Invitations */
 .gameInvites {
-    background: white;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -530,8 +538,11 @@
 
 :global(.dark-mode) .optionCard,
 :global(.dark-mode) .socialSection,
-:global(.dark-mode) .gameInvites {
-    background: #1e293b;
+:global(.dark-mode) .gameInvites,
+:global(.dark-mode) .chatSection {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
 }
 
@@ -587,9 +598,7 @@
     color: #94a3b8;
 }
 
-:global(.dark-mode) .chatSection {
-    background: #1e293b;
-}
+/* Removed redundant chatSection dark background since it's grouped above */
 
 :global(.dark-mode) .chatMessages {
     background: #0f172a;
