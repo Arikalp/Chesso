@@ -1,0 +1,326 @@
+.loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: white;
+    font-size: 2rem;
+}
+
+.gameHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.gameHeader h2 {
+    color: white;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+.gameControls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.controlBtn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.controlBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.themeBtn {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+}
+
+.themeBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.userDisplay {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.gameContainer {
+    display: flex;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    gap: 30px;
+}
+
+.gameSidebar {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.playerCard {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.playerCard.current {
+    border: 3px solid #28a745;
+}
+
+.playerCard.opponent {
+    border: 3px solid #dc3545;
+}
+
+.playerAvatar {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.playerNameText {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.playerStatusText,
+.playerRole {
+    color: #666;
+    font-size: 14px;
+}
+
+.gameInfo {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.turnIndicator {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.gameStatusDisplay {
+    font-weight: 500;
+}
+
+.gameTimer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+    text-align: center;
+    margin: 10px 0;
+    font-family: "Courier New", monospace;
+}
+
+.boardContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Chessboard */
+.chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 1px;
+    background-color: #8b4513;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    touch-action: manipulation;
+}
+
+.square {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 0.2s;
+}
+
+.square.light {
+    background-color: #f0d9b5;
+}
+
+.square.dark {
+    background-color: #b58863;
+}
+
+.square:hover {
+    background-color: #ffd700;
+}
+
+.piece {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: auto;
+    touch-action: none;
+}
+
+.piece:active {
+    cursor: grabbing;
+}
+
+.whitePiece {
+    color: #ffffff;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+.blackPiece {
+    color: #000000;
+    text-shadow: 1px 1px 2px #ffffff;
+}
+
+/* Move highlighting */
+.square.selected {
+    background-color: #ffd700 !important;
+    box-shadow: inset 0 0 0 3px #ff8c00;
+}
+
+.square.possibleMove {
+    position: relative;
+}
+
+.square.possibleMove::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(0, 255, 0, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.square.possibleMove:hover {
+    background-color: rgba(0, 255, 0, 0.3) !important;
+}
+
+/* Dark mode */
+:global(.dark-mode) .gameHeader {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark-mode) .playerCard,
+:global(.dark-mode) .gameInfo {
+    background: #1e293b;
+    color: white;
+}
+
+:global(.dark-mode) .playerNameText,
+:global(.dark-mode) .turnIndicator {
+    color: white;
+}
+
+:global(.dark-mode) .playerStatusText,
+:global(.dark-mode) .playerRole {
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .chessboard {
+    background-color: #1e293b;
+}
+
+:global(.dark-mode) .square.light {
+    background-color: #ecf0f1;
+}
+
+:global(.dark-mode) .square.dark {
+    background-color: #95a5a6;
+}
+
+:global(.dark-mode) .square.selected {
+    background-color: #ffa500 !important;
+    box-shadow: inset 0 0 0 3px #ff6347;
+}
+
+:global(.dark-mode) .square.possibleMove::after {
+    background-color: rgba(144, 238, 144, 0.8);
+}
+
+:global(.dark-mode) .square.possibleMove:hover {
+    background-color: rgba(144, 238, 144, 0.3) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .square {
+        width: 45px;
+        height: 45px;
+    }
+
+    .piece {
+        font-size: 32px;
+    }
+
+    .square.possibleMove::after {
+        width: 15px;
+        height: 15px;
+    }
+
+    .gameContainer {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .gameSidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .playerCard {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .gameInfo {
+        flex: 1;
+        min-width: 200px;
+    }
+}

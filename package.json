@@ -1,23 +1,18 @@
 {
-  "name": "chesso",
-  "version": "1.0.0",
-  "main": "app.js",
-  "engines": {
-    "node": ">=18.x"
-  },
+  "name": "temp-next",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "build": "echo 'No build step required'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "chess.js": "^1.4.0",
-    "ejs": "^3.1.10",
-    "express": "^5.1.0",
-    "nodemon": "^3.1.10"
+    "firebase": "^12.10.0",
+    "next": "14.2.35",
+    "react": "^18",
+    "react-dom": "^18"
   }
 }

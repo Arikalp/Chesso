@@ -1,0 +1,240 @@
+.authContainer {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.authCard {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+}
+
+.authCard h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.headerRow h1 {
+    margin: 0;
+    margin-bottom: 0;
+}
+
+.themeBtn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.themeBtn:hover {
+    background: #5a6fd8;
+    transform: scale(1.1);
+}
+
+.authTabs {
+    display: flex;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.tabBtn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.tabBtn.active {
+    background: #667eea;
+    color: white;
+}
+
+.authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.authForm input {
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    background: white;
+    color: #333;
+}
+
+.authForm input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.authForm>button {
+    padding: 15px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.authForm>button:hover {
+    background: #5a6fd8;
+}
+
+.passwordContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.passwordContainer input {
+    flex: 1;
+    padding-right: 45px;
+}
+
+.togglePassword {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    z-index: 1;
+}
+
+.togglePassword:hover {
+    opacity: 0.7;
+}
+
+.divider {
+    margin: 20px 0;
+    color: #999;
+    position: relative;
+    text-align: center;
+}
+
+.divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e0e0e0;
+    z-index: 1;
+}
+
+.divider span {
+    background: white;
+    padding: 0 15px;
+    z-index: 2;
+    position: relative;
+}
+
+.googleBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+    width: 100%;
+}
+
+.googleBtn:hover {
+    border-color: #4285f4;
+    box-shadow: 0 2px 10px rgba(66, 133, 244, 0.2);
+}
+
+/* Dark mode styles */
+:global(.dark-mode) .authCard {
+    background: #1e293b;
+    color: white;
+}
+
+:global(.dark-mode) .authCard h1 {
+    color: white;
+}
+
+:global(.dark-mode) .authForm input {
+    background: #0f172a;
+    color: white;
+    border-color: #334155;
+}
+
+:global(.dark-mode) .authForm input:focus {
+    border-color: #667eea;
+}
+
+:global(.dark-mode) .authTabs {
+    background: #0f172a;
+}
+
+:global(.dark-mode) .tabBtn {
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .tabBtn.active {
+    background: #667eea;
+    color: white;
+}
+
+:global(.dark-mode) .googleBtn {
+    background: #0f172a;
+    border-color: #334155;
+    color: white;
+}
+
+:global(.dark-mode) .googleBtn:hover {
+    border-color: #667eea;
+}
+
+:global(.dark-mode) .divider span {
+    background: #1e293b;
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .divider::before {
+    background: #334155;
+}
+
+:global(.dark-mode) .togglePassword {
+    color: white;
+}

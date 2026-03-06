@@ -1,0 +1,568 @@
+.loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: white;
+    font-size: 2rem;
+}
+
+.lobbyContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.lobbyHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.lobbyHeader h1 {
+    color: white;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.userInfo span {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.logoutBtn,
+.themeBtn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.logoutBtn:hover,
+.themeBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.themeBtn {
+    font-size: 16px;
+    padding: 8px 12px;
+}
+
+.lobbyContent {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.gameOptions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.optionCard {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.optionCard:hover {
+    transform: translateY(-5px);
+}
+
+.optionCard h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.optionCard p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.optionCard input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    background: white;
+    color: #333;
+}
+
+.primaryBtn {
+    width: 100%;
+    padding: 15px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.primaryBtn:hover {
+    background: #5a6fd8;
+}
+
+/* Chat Section */
+.chatSection {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatHeader {
+    background: #667eea;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+}
+
+.playerIdMini {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.copyBtnMini {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.copyBtnMini:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.chatMessages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chatMessage {
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.chatMessage.own {
+    background: #667eea;
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.chatMessage.other {
+    background: white;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    align-self: flex-start;
+}
+
+.messageSender {
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 2px;
+    opacity: 0.8;
+}
+
+.messageContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.messageTime {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: 2px;
+}
+
+.messageMenu {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.own:hover .messageMenu {
+    opacity: 1;
+}
+
+.messageMenu:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.chatInputContainer {
+    display: flex;
+    padding: 15px;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    gap: 10px;
+}
+
+.chatInputContainer input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    outline: none;
+    font-size: 14px;
+    background: white;
+    color: #333;
+}
+
+.chatInputContainer input:focus {
+    border-color: #667eea;
+}
+
+.sendBtn {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.sendBtn:hover {
+    background: #5a6fd8;
+}
+
+.emptyChat {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    margin-top: 50px;
+}
+
+/* Social Section */
+.socialSection {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.socialTabs {
+    display: flex;
+    background: #f8f9fa;
+}
+
+.socialTab {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s;
+}
+
+.socialTab.active {
+    background: white;
+    color: #667eea;
+    border-bottom: 3px solid #667eea;
+}
+
+.socialTab:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.tabContent {
+    padding: 25px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Player/Invite Items */
+.playerItem,
+.inviteItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #f0f0f0;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+
+.playerItem:hover,
+.inviteItem:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.playerName {
+    font-weight: 500;
+    color: #333;
+}
+
+.playerStatus {
+    color: #28a745;
+    font-size: 14px;
+}
+
+.inviteBtn,
+.acceptBtn,
+.declineBtn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.inviteBtn {
+    background: #667eea;
+    color: white;
+}
+
+.acceptBtn {
+    background: #28a745;
+    color: white;
+    margin-right: 5px;
+}
+
+.declineBtn {
+    background: #dc3545;
+    color: white;
+}
+
+.friendBtn {
+    padding: 6px 12px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.friendBtn.pending {
+    background: #ffc107;
+}
+
+.friendBtn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Game Invitations */
+.gameInvites {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.gameInvites h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.invitesList {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* PWA Install Button */
+.installBtn {
+    padding: 8px 16px;
+    background: #28a745;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    margin-right: 10px;
+}
+
+.installBtn:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+/* Dark mode */
+:global(.dark-mode) .lobbyHeader {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark-mode) .optionCard,
+:global(.dark-mode) .socialSection,
+:global(.dark-mode) .gameInvites {
+    background: #1e293b;
+    color: white;
+}
+
+:global(.dark-mode) .optionCard h3,
+:global(.dark-mode) .gameInvites h3 {
+    color: white;
+}
+
+:global(.dark-mode) .optionCard p {
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .optionCard input {
+    background: #0f172a;
+    color: white;
+    border-color: #334155;
+}
+
+:global(.dark-mode) .optionCard input:focus {
+    border-color: #667eea;
+}
+
+:global(.dark-mode) .socialTabs {
+    background: #0f172a;
+}
+
+:global(.dark-mode) .socialTab {
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .socialTab.active {
+    background: #1e293b;
+    color: #667eea;
+}
+
+:global(.dark-mode) .playerItem,
+:global(.dark-mode) .inviteItem {
+    border-color: #334155;
+    background: #0f172a;
+}
+
+:global(.dark-mode) .playerItem:hover,
+:global(.dark-mode) .inviteItem:hover {
+    border-color: #667eea;
+    background: #1e293b;
+}
+
+:global(.dark-mode) .playerName {
+    color: white;
+}
+
+:global(.dark-mode) .playerStatus {
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .chatSection {
+    background: #1e293b;
+}
+
+:global(.dark-mode) .chatMessages {
+    background: #0f172a;
+}
+
+:global(.dark-mode) .chatMessage.other {
+    background: #1e293b;
+    color: white;
+    border-color: #334155;
+}
+
+:global(.dark-mode) .chatInputContainer {
+    background: #1e293b;
+    border-top-color: #334155;
+}
+
+:global(.dark-mode) .chatInputContainer input {
+    background: #0f172a;
+    color: white;
+    border-color: #334155;
+}
+
+:global(.dark-mode) .chatInputContainer input:focus {
+    border-color: #667eea;
+}
+
+:global(.dark-mode) .emptyChat {
+    color: #94a3b8;
+}
+
+:global(.dark-mode) .tabContent {
+    background: #1e293b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .lobbyContent {
+        grid-template-columns: 1fr;
+    }
+
+    .gameOptions {
+        grid-template-columns: 1fr;
+    }
+
+    .lobbyHeader {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .socialTabs {
+        flex-direction: column;
+    }
+}
