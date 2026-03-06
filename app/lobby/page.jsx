@@ -820,7 +820,12 @@ export default function LobbyPage() {
                     </div>
                     <div className={styles.messageTime}>
                       {msg.timestamp
-                        ? new Date(msg.timestamp.toDate()).toLocaleTimeString(
+                        ? new Date(msg.timestamp.toDate()).toLocaleDateString(
+                            [],
+                            { month: "short", day: "numeric" }
+                          ) +
+                          ", " +
+                          new Date(msg.timestamp.toDate()).toLocaleTimeString(
                             [],
                             { hour: "2-digit", minute: "2-digit" }
                           )
