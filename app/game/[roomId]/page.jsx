@@ -35,10 +35,12 @@ export default function GamePage() {
   const [timerDisplay, setTimerDisplay] = useState("00:00");
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [highlightedMoves, setHighlightedMoves] = useState([]);
+  const [isGameOver, setIsGameOver] = useState(false);
   const dragState = useRef({ piece: null, source: null });
   const gameStartTimeRef = useRef(null);
   const timerIntervalRef = useRef(null);
   const hasAnnouncedResult = useRef(false);
+  const lastProcessedFen = useRef(null);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -70,7 +72,29 @@ export default function GamePage() {
     timerIntervalRef.current = setInterval(updateTimer, 1000);
   }, []);
 
-  // Update game UI
+  // Check for any game-ending condition using chess.js
+  function getGameEndInfo(chess) {
+    if (chess.isCheckmate()) {
+      const winner = chess.turn() === "w" ? "black" : "white";
+      return { ended: true, winner, result: "checkmate", endReason: "checkmate" };
+    }
+    if (chess.isStalemate()) {
+      return { ended: true, winner: "draw", result: "draw", endReason: "stalemate" };
+    }
+    if (chess.isThreefoldRepetition()) {
+      return { ended: true, winner: "draw", result: "draw", endReason: "threefold repetition" };
+    }
+    if (chess.isInsufficientMaterial()) {
+      return { ended: true, winner: "draw", result: "draw", endReason: "insufficient material" };
+    }
+    if (chess.isDraw()) {
+      // Catches 50-move rule and other draw conditions
+      return { ended: true, winner: "draw", result: "draw", endReason: "50-move rule" };
+    }
+    return { ended: false };
+  }
+
+  // Update game UI — DISPLAY ONLY, no Firestore writes
   const updateGameUI = useCallback(
     (gameData) => {
       const chess = chessRef.current;
@@ -113,110 +137,90 @@ export default function GamePage() {
       setPlayerRole(role);
 
       // Turn display
-      try {
-        const currentTurn = chess.turn() === "w" ? "White" : "Black";
-        setTurnDisplay(`${currentTurn} to move`);
-      } catch {
-        setTurnDisplay("White to move");
-      }
+      const currentTurn = chess.turn() === "w" ? "White" : "Black";
+      setTurnDisplay(`${currentTurn} to move`);
 
-      // Game status
-      try {
-        if (chess.isCheckmate()) {
-          const winner = chess.turn() === "w" ? "black" : "white";
+      // Game status — display only
+      const endInfo = getGameEndInfo(chess);
+
+      if (endInfo.ended) {
+        setIsGameOver(true);
+        if (timerIntervalRef.current) {
+          clearInterval(timerIntervalRef.current);
+          timerIntervalRef.current = null;
+        }
+
+        if (endInfo.winner === "draw") {
+          setGameStatus(`Draw - ${endInfo.endReason}!`);
+          setGameStatusColor("#ffc107");
+          if (!hasAnnouncedResult.current) {
+            hasAnnouncedResult.current = true;
+            toast.warning(`Game ended in a draw — ${endInfo.endReason}!`);
+          }
+        } else {
           const winnerName =
-            winner === role
+            endInfo.winner === role
               ? "You"
-              : winner === "white"
+              : endInfo.winner === "white"
                 ? gameData.player1?.name
                 : gameData.player2?.name;
-          setGameStatus(`Checkmate! ${winnerName} wins!`);
-          setGameStatusColor(winner === role ? "#28a745" : "#dc3545");
-          if (gameData.status === "active") {
-            updateGameResult(winner, "checkmate");
-          }
+          setGameStatus(`${endInfo.endReason === "checkmate" ? "Checkmate! " : ""}${winnerName} wins!`);
+          setGameStatusColor(endInfo.winner === role ? "#28a745" : "#dc3545");
           if (!hasAnnouncedResult.current) {
             hasAnnouncedResult.current = true;
-            if (winner === role) {
-              toast.success("🎉 Checkmate! You win!");
+            if (endInfo.winner === role) {
+              toast.success(`🎉 ${endInfo.endReason === "checkmate" ? "Checkmate! " : ""}You win!`);
             } else {
-              toast.error("😔 Checkmate! You lose.");
+              toast.error(`😔 ${endInfo.endReason === "checkmate" ? "Checkmate! " : ""}You lose.`);
             }
           }
-        } else if (chess.isStalemate()) {
-          setGameStatus("Stalemate - Draw!");
+        }
+      } else if (gameData.status === "finished") {
+        // Game was marked finished in Firestore (e.g., resignation, timeout)
+        setIsGameOver(true);
+        if (timerIntervalRef.current) {
+          clearInterval(timerIntervalRef.current);
+          timerIntervalRef.current = null;
+        }
+        if (gameData.result === "draw") {
+          setGameStatus(`Draw - ${gameData.endReason || "Game ended"}`);
           setGameStatusColor("#ffc107");
-          if (gameData.status === "active") updateGameResult("draw", "stalemate");
-          if (!hasAnnouncedResult.current) {
-            hasAnnouncedResult.current = true;
-            toast.warning("Game ended in stalemate — it's a draw!");
-          }
-        } else if (chess.isThreefoldRepetition()) {
-          setGameStatus("Draw - Threefold Repetition!");
-          setGameStatusColor("#ffc107");
-          if (gameData.status === "active") updateGameResult("draw", "threefold");
-          if (!hasAnnouncedResult.current) {
-            hasAnnouncedResult.current = true;
-            toast.warning("Threefold repetition — it's a draw!");
-          }
-        } else if (chess.isInsufficientMaterial()) {
-          setGameStatus("Draw - Insufficient Material!");
-          setGameStatusColor("#ffc107");
-          if (gameData.status === "active") updateGameResult("draw", "insufficient");
-          if (!hasAnnouncedResult.current) {
-            hasAnnouncedResult.current = true;
-            toast.warning("Insufficient material — it's a draw!");
-          }
-        } else if (chess.isCheck()) {
-          setGameStatus("Check!");
-          setGameStatusColor("#dc3545");
-        } else if (gameData.status === "finished") {
+        } else {
+          const winnerName =
+            gameData.winner === role
+              ? "You"
+              : gameData.winner === "white"
+                ? gameData.player1?.name
+                : gameData.player2?.name;
+          setGameStatus(`${winnerName} wins!`);
+          setGameStatusColor(gameData.winner === role ? "#28a745" : "#dc3545");
+        }
+        if (!hasAnnouncedResult.current) {
+          hasAnnouncedResult.current = true;
           if (gameData.result === "draw") {
-            setGameStatus(`Draw - ${gameData.endReason || "Game ended"}`);
-            setGameStatusColor("#ffc107");
+            toast.warning("Game ended in a draw!");
+          } else if (gameData.winner === role) {
+            toast.success("🎉 You win!");
           } else {
-            const winnerName =
-              gameData.winner === role
-                ? "You"
-                : gameData.winner === "white"
-                  ? gameData.player1?.name
-                  : gameData.player2?.name;
-            setGameStatus(`${winnerName} wins!`);
-            setGameStatusColor(gameData.winner === role ? "#28a745" : "#dc3545");
+            toast.error("😔 You lose.");
           }
-          if (!hasAnnouncedResult.current) {
-            hasAnnouncedResult.current = true;
-            if (gameData.result === "draw") {
-              toast.warning("Game ended in a draw!");
-            } else if (gameData.winner === role) {
-              toast.success("🎉 You win!");
-            } else {
-              toast.error("😔 You lose.");
-            }
-          }
-        } else if (
-          gameData.status === "active" &&
-          gameData.player1 &&
-          gameData.player2
-        ) {
-          setGameStatus("In Progress");
-          setGameStatusColor("#28a745");
-        } else {
-          setGameStatus("Waiting for players");
-          setGameStatusColor("#666");
         }
-      } catch {
-        if (
-          gameData.status === "active" &&
-          gameData.player1 &&
-          gameData.player2
-        ) {
-          setGameStatus("In Progress");
-          setGameStatusColor("#28a745");
-        } else {
-          setGameStatus("Waiting for players");
-          setGameStatusColor("#666");
-        }
+      } else if (chess.isCheck()) {
+        setGameStatus("Check!");
+        setGameStatusColor("#dc3545");
+        setIsGameOver(false);
+      } else if (
+        gameData.status === "active" &&
+        gameData.player1 &&
+        gameData.player2
+      ) {
+        setGameStatus("In Progress");
+        setGameStatusColor("#28a745");
+        setIsGameOver(false);
+      } else {
+        setGameStatus("Waiting for players");
+        setGameStatusColor("#666");
+        setIsGameOver(false);
       }
 
       // Update board
@@ -234,10 +238,11 @@ export default function GamePage() {
       (docSnap) => {
         if (docSnap.exists()) {
           const gameData = docSnap.data();
-          if (gameData.fen) {
+          if (gameData.fen && gameData.fen !== lastProcessedFen.current) {
+            lastProcessedFen.current = gameData.fen;
             chessRef.current.load(gameData.fen);
           }
-          setTimeout(() => updateGameUI(gameData), 100);
+          updateGameUI(gameData);
         } else {
           toast.error("Game room not found!");
           router.push("/lobby");
@@ -255,65 +260,60 @@ export default function GamePage() {
     };
   }, [user, roomId, updateGameUI, router, toast]);
 
-  // Make move
+  // Make move — single source of truth for game ending writes
   async function makeMove(move) {
     const chess = chessRef.current;
+
+    if (isGameOver) {
+      toast.info("This game is over");
+      return;
+    }
+
+    // Check turn
+    const isPlayerTurn =
+      (chess.turn() === "w" && playerRole === "white") ||
+      (chess.turn() === "b" && playerRole === "black");
+    if (!isPlayerTurn) {
+      toast.warning("It's not your turn!");
+      return;
+    }
+
+    if (playerRole === "spectator") {
+      toast.info("You are spectating this game");
+      return;
+    }
+
+    // Validate move on a copy first
+    const testChess = new Chess(chess.fen());
+    const result = testChess.move(move);
+    if (!result) {
+      toast.warning("Invalid move");
+      return;
+    }
+
     try {
       setSelectedSquare(null);
       setHighlightedMoves([]);
 
-      const isPlayerTurn =
-        (chess.turn() === "w" && playerRole === "white") ||
-        (chess.turn() === "b" && playerRole === "black");
-      if (!isPlayerTurn) {
-        toast.warning("It's not your turn!");
-        return;
-      }
-
-      const testChess = new Chess(chess.fen());
-      const result = testChess.move(move);
-      if (!result) {
-        toast.warning("Invalid move");
-        return;
-      }
-
       const updateData = {
         fen: testChess.fen(),
-        lastMove: move,
+        lastMove: { from: result.from, to: result.to, promotion: result.promotion || null },
         lastMoveBy: user.uid,
         lastMoveAt: serverTimestamp(),
       };
 
-      if (testChess.isCheckmate()) {
-        const winner = testChess.turn() === "w" ? "black" : "white";
-        Object.assign(updateData, {
-          status: "finished",
-          winner,
-          result: "checkmate",
-          endReason: "checkmate",
-          endedAt: serverTimestamp(),
-        });
-      } else if (testChess.isStalemate()) {
-        Object.assign(updateData, {
-          status: "finished",
-          result: "draw",
-          endReason: "stalemate",
-          endedAt: serverTimestamp(),
-        });
-      } else if (testChess.isThreefoldRepetition()) {
-        Object.assign(updateData, {
-          status: "finished",
-          result: "draw",
-          endReason: "threefold repetition",
-          endedAt: serverTimestamp(),
-        });
-      } else if (testChess.isInsufficientMaterial()) {
-        Object.assign(updateData, {
-          status: "finished",
-          result: "draw",
-          endReason: "insufficient material",
-          endedAt: serverTimestamp(),
-        });
+      // Check for game-ending conditions after the move
+      const endInfo = getGameEndInfo(testChess);
+      if (endInfo.ended) {
+        updateData.status = "finished";
+        updateData.endReason = endInfo.endReason;
+        updateData.endedAt = serverTimestamp();
+        if (endInfo.winner === "draw") {
+          updateData.result = "draw";
+        } else {
+          updateData.winner = endInfo.winner;
+          updateData.result = "checkmate";
+        }
       }
 
       await updateDoc(doc(db, "gameRooms", roomId), updateData);
@@ -323,23 +323,25 @@ export default function GamePage() {
     }
   }
 
-  async function updateGameResult(winner, endReason) {
-    try {
-      const updateData = {
-        status: "finished",
-        endedAt: serverTimestamp(),
-        endReason,
-      };
-      if (winner === "draw") {
-        updateData.result = "draw";
-      } else {
-        updateData.winner = winner;
-        updateData.result = "win";
+  // Build a move object with auto-promotion for pawns
+  function buildMoveObj(fromSquare, toSquare) {
+    const chess = chessRef.current;
+    const piece = chess.get(fromSquare);
+
+    const moveObj = { from: fromSquare, to: toSquare };
+
+    // Auto-promote to queen if pawn reaches last rank
+    if (piece && piece.type === "p") {
+      const targetRank = toSquare[1];
+      if (
+        (piece.color === "w" && targetRank === "8") ||
+        (piece.color === "b" && targetRank === "1")
+      ) {
+        moveObj.promotion = "q";
       }
-      await updateDoc(doc(db, "gameRooms", roomId), updateData);
-    } catch (error) {
-      console.error("Error updating game result:", error);
     }
+
+    return moveObj;
   }
 
   // Piece Unicode
@@ -359,15 +361,47 @@ export default function GamePage() {
   function handleSquareClick(row, col, piece) {
     const chess = chessRef.current;
 
+    if (isGameOver) return;
+
     if (selectedSquare) {
+      // Clicking the same square again — deselect
+      if (selectedSquare.row === row && selectedSquare.col === col) {
+        setSelectedSquare(null);
+        setHighlightedMoves([]);
+        return;
+      }
+
+      // Clicking a different friendly piece — re-select it
+      if (piece) {
+        const isPlayerPiece =
+          (piece.color === "w" && playerRole === "white") ||
+          (piece.color === "b" && playerRole === "black");
+        if (isPlayerPiece) {
+          const sq = `${String.fromCharCode(97 + col)}${8 - row}`;
+          const moves = chess.moves({ square: sq, verbose: true });
+          if (moves.length > 0) {
+            setSelectedSquare({ row, col });
+            setHighlightedMoves(
+              moves.map((m) => ({
+                row: 8 - parseInt(m.to[1]),
+                col: m.to.charCodeAt(0) - 97,
+              }))
+            );
+            return;
+          }
+        }
+      }
+
+      // Attempt move from selected square to clicked square
       const fromSquare = `${String.fromCharCode(97 + selectedSquare.col)}${8 - selectedSquare.row}`;
       const toSquare = `${String.fromCharCode(97 + col)}${8 - row}`;
-      makeMove({ from: fromSquare, to: toSquare });
+      makeMove(buildMoveObj(fromSquare, toSquare));
       setSelectedSquare(null);
       setHighlightedMoves([]);
       return;
     }
 
+    // No square selected — select a piece
     if (piece) {
       const isPlayerPiece =
         (piece.color === "w" && playerRole === "white") ||
@@ -394,6 +428,7 @@ export default function GamePage() {
 
   // Drag handlers
   function handleDragStart(e, row, col) {
+    if (isGameOver) { e.preventDefault(); return; }
     dragState.current = { piece: true, source: { row, col } };
     e.dataTransfer.effectAllowed = "move";
     setSelectedSquare(null);
@@ -407,12 +442,13 @@ export default function GamePage() {
 
     const fromSquare = `${String.fromCharCode(97 + source.col)}${8 - source.row}`;
     const toSquare = `${String.fromCharCode(97 + targetCol)}${8 - targetRow}`;
-    makeMove({ from: fromSquare, to: toSquare });
+    makeMove(buildMoveObj(fromSquare, toSquare));
     dragState.current = { piece: null, source: null };
   }
 
   // Touch handlers
   function handleTouchStart(e, row, col) {
+    if (isGameOver) return;
     e.preventDefault();
     dragState.current = { piece: true, source: { row, col } };
   }
@@ -432,13 +468,7 @@ export default function GamePage() {
 
       const fromSq = `${String.fromCharCode(97 + sourceCol)}${8 - sourceRow}`;
       const toSq = `${String.fromCharCode(97 + targetCol)}${8 - targetRow}`;
-
-      const testChess = new Chess(chessRef.current.fen());
-      if (testChess.move({ from: fromSq, to: toSq })) {
-        makeMove({ from: fromSq, to: toSq });
-      } else {
-        toast.warning("Invalid move");
-      }
+      makeMove(buildMoveObj(fromSq, toSq));
     }
     dragState.current = { piece: null, source: null };
   }
@@ -528,7 +558,7 @@ export default function GamePage() {
                   ((piece.color === "w" && playerRole === "white") ||
                     (piece.color === "b" && playerRole === "black"));
                 const isDraggable =
-                  isPlayerPiece && playerRole !== "spectator";
+                  isPlayerPiece && playerRole !== "spectator" && !isGameOver;
 
                 return (
                   <div

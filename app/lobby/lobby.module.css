@@ -128,6 +128,57 @@
 }
 
 /* Chat Section */
+.createdRoomInfo {
+    background: #f8f9fc;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    margin-top: 15px;
+}
+
+.roomCodeDisplay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    color: #333;
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px dashed #667eea;
+}
+
+.roomCodeDisplay strong {
+    color: #667eea;
+    font-family: monospace;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+}
+
+.secondaryBtn {
+    transition: all 0.2s;
+}
+
+.secondaryBtn:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+:global(.dark-mode) .createdRoomInfo {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+:global(.dark-mode) .roomCodeDisplay {
+    background: #1e293b;
+    border-color: #667eea;
+    color: white;
+}
+
+:global(.dark-mode) .secondaryBtn:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
 .chatSection {
     background: white;
     border-radius: 15px;

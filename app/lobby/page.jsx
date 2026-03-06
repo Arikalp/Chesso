@@ -62,6 +62,8 @@ export default function LobbyPage() {
   const [playerSearch, setPlayerSearch] = useState("");
   const [myPlayerId, setMyPlayerId] = useState("#LOADING");
   const [activeTab, setActiveTab] = useState("players");
+  const [createdRoomCode, setCreatedRoomCode] = useState(null);
+  const [createdRoomId, setCreatedRoomId] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [friendshipStatuses, setFriendshipStatuses] = useState({});
   const chatRef = useRef(null);
@@ -495,8 +497,9 @@ export default function LobbyPage() {
         fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
       });
       const code = gameRoom.id.substring(0, 6).toUpperCase();
-      toast.success(`Room created! Code: ${code}`);
-      router.push(`/game/${gameRoom.id}`);
+      setCreatedRoomCode(code);
+      setCreatedRoomId(gameRoom.id);
+      toast.success(`Room created successfully!`);
     } catch (error) {
       toast.error("Failed to create game room. Please try again.");
     }
@@ -740,9 +743,47 @@ export default function LobbyPage() {
             <div className={styles.optionCard}>
               <h3>Create Game</h3>
               <p>Create a room and invite friends</p>
-              <button onClick={createGame} className={styles.primaryBtn}>
-                Create Room
-              </button>
+              {createdRoomCode ? (
+                <div className={styles.createdRoomInfo}>
+                  <div className={styles.roomCodeDisplay}>
+                    <span>Code: </span>
+                    <strong>{createdRoomCode}</strong>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(createdRoomCode);
+                        toast.success("Room code copied!");
+                      }}
+                      className={styles.copyBtnMini}
+                      title="Copy Room Code"
+                    >
+                      📋
+                    </button>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                    <button 
+                      onClick={() => router.push(`/game/${createdRoomId}`)} 
+                      className={styles.primaryBtn}
+                      style={{ flex: 1 }}
+                    >
+                      Enter Room
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setCreatedRoomCode(null);
+                        setCreatedRoomId(null);
+                      }} 
+                      className={styles.secondaryBtn}
+                      style={{ padding: '8px 12px', background: 'transparent', border: '1px solid #ccc', borderRadius: '8px', cursor: 'pointer', color: 'inherit' }}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={createGame} className={styles.primaryBtn}>
+                  Create Room
+                </button>
+              )}
             </div>
 
             <div className={styles.optionCard}>
