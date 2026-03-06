@@ -730,11 +730,11 @@ export default function LobbyPage() {
               <h3>Quick Match</h3>
               <p>Find a random opponent</p>
               {isSearching ? (
-                <button onClick={cancelQuickMatch} className={styles.primaryBtn}>
+                <button key="cancel-search" onClick={cancelQuickMatch} className={styles.primaryBtn}>
                   Cancel Search
                 </button>
               ) : (
-                <button onClick={findQuickMatch} className={styles.primaryBtn}>
+                <button key="find-match" onClick={findQuickMatch} className={styles.primaryBtn}>
                   Find Match
                 </button>
               )}
@@ -744,7 +744,7 @@ export default function LobbyPage() {
               <h3>Create Game</h3>
               <p>Create a room and invite friends</p>
               {createdRoomCode ? (
-                <div className={styles.createdRoomInfo}>
+                <div key="room-info" className={styles.createdRoomInfo}>
                   <div className={styles.roomCodeDisplay}>
                     <span>Code: </span>
                     <strong>{createdRoomCode}</strong>
@@ -780,7 +780,7 @@ export default function LobbyPage() {
                   </div>
                 </div>
               ) : (
-                <button onClick={createGame} className={styles.primaryBtn}>
+                <button key="create-btn" onClick={createGame} className={styles.primaryBtn}>
                   Create Room
                 </button>
               )}

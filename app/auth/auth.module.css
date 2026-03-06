@@ -7,6 +7,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #1a1a2e;
 }
 
 .authCard {
@@ -21,8 +22,8 @@
 .authCard h1 {
     font-size: 2.5rem;
     margin-bottom: 30px;
-    color: #333;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
 }
 
 .headerRow {
@@ -191,6 +192,7 @@
 
 :global(.dark-mode) .authCard h1 {
     color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 :global(.dark-mode) .authForm input {

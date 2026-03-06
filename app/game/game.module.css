@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    color: white;
+    color: #1a1a2e;
     font-size: 2rem;
 }
 
@@ -17,9 +17,9 @@
 }
 
 .gameHeader h2 {
-    color: white;
+    color: #1a1a2e;
     font-size: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
     margin: 0;
 }
 
@@ -31,23 +31,24 @@
 
 .controlBtn {
     padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.5);
+    color: #1a1a2e;
+    border: 2px solid rgba(0, 0, 0, 0.1);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .controlBtn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.2);
 }
 
 .themeBtn {
     padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.5);
+    color: #1a1a2e;
+    border: 2px solid rgba(0, 0, 0, 0.1);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s;
@@ -55,11 +56,12 @@
 }
 
 .themeBtn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.2);
 }
 
 .userDisplay {
-    color: white;
+    color: #1a1a2e;
     font-size: 18px;
     font-weight: 500;
 }
@@ -240,9 +242,35 @@
     background-color: rgba(0, 255, 0, 0.3) !important;
 }
 
-/* Dark mode */
+/* Dark mode overrides */
+:global(.dark-mode) .loadingContainer {
+    color: white;
+}
+
 :global(.dark-mode) .gameHeader {
     background: rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark-mode) .gameHeader h2 {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark-mode) .controlBtn,
+:global(.dark-mode) .themeBtn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+:global(.dark-mode) .controlBtn:hover,
+:global(.dark-mode) .themeBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+:global(.dark-mode) .userDisplay {
+    color: white;
 }
 
 :global(.dark-mode) .playerCard,
