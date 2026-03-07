@@ -12,6 +12,7 @@ export const metadata = {
   description: "Play chess online with friends in real-time",
   manifest: "/manifest.json",
   icons: {
+    icon: "/favicons/chesso.ico",
     apple: "/icons/logo.jpg",
   },
 };
