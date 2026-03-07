@@ -12,10 +12,22 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setLoading(false);
-
       if (firebaseUser) {
+        // Enforce 1-week session limit
+        const lastSignInTime = new Date(firebaseUser.metadata.lastSignInTime).getTime();
+        const currentTime = new Date().getTime();
+        const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+
+        if (currentTime - lastSignInTime > oneWeekInMs) {
+          import("firebase/auth").then(({ signOut }) => {
+            signOut(auth);
+          });
+          return;
+        }
+
+        setUser(firebaseUser);
+        setLoading(false);
+
         localStorage.setItem("userToken", firebaseUser.accessToken);
         localStorage.setItem("userId", firebaseUser.uid);
         localStorage.setItem(
@@ -23,6 +35,9 @@ export function AuthProvider({ children }) {
           firebaseUser.displayName || firebaseUser.email
         );
       } else {
+        setUser(null);
+        setLoading(false);
+
         localStorage.removeItem("userToken");
         localStorage.removeItem("userId");
         localStorage.removeItem("userName");
