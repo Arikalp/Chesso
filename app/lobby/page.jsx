@@ -815,6 +815,14 @@ export default function LobbyPage() {
                 Search Player
               </button>
             </div>
+
+            <div className={styles.optionCard}>
+              <h3>🤖 Play vs Computer</h3>
+              <p>Challenge the AI in a local game — Easy to Expert</p>
+              <button onClick={() => router.push("/game/ai")} className={styles.primaryBtn}>
+                Play vs AI
+              </button>
+            </div>
           </div>
 
           {/* Chat Section */}
