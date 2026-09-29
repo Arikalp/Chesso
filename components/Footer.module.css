@@ -1,22 +1,30 @@
 .footer {
   text-align: center;
-  padding: 15px;
-  background: rgba(255, 255, 255, 0.5);
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(10px);
-  color: #1a1a2e;
-  font-size: 14px;
+  border-top: 1px solid rgba(245, 197, 66, 0.1);
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted, #8a8a9a);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
 
 .gradientLink {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  background: linear-gradient(135deg, #f5c542 0%, #fde68a 50%, #c9932a 100%);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
-  font-weight: bold;
+  font-weight: 700;
   text-decoration: none;
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition: filter 0.2s, transform 0.2s;
   display: inline-block;
+  animation: shimmer 4s linear infinite;
 }
 
 .gradientLink:hover {
@@ -24,7 +32,14 @@
   filter: brightness(1.2);
 }
 
-:global(.dark-mode) .footer {
-  background: rgba(0, 0, 0, 0.2);
-  color: white;
+:global(.light-mode) .footer {
+  background: rgba(124, 58, 237, 0.04);
+  border-top-color: rgba(124, 58, 237, 0.12);
+  color: #6b7280;
+}
+
+:global(.light-mode) .gradientLink {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #6d28d9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }

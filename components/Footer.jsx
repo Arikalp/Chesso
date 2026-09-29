@@ -13,7 +13,7 @@ export default function Footer() {
           rel="noopener noreferrer"
           className={styles.gradientLink}
         >
-          Sankalp
+          Arikalp
         </a>{" "}
         with ❤️
       </p>

@@ -1,354 +1,369 @@
+/* ═══════════════════════════════════════════
+   GAME BOARD — Gamified CSS
+═══════════════════════════════════════════ */
+
+/* ── Loading ────────────────────────────────── */
 .loadingContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    color: #1a1a2e;
-    font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 1.8rem;
+  color: var(--gold, #f5c542);
+  text-shadow: 0 0 20px rgba(245,197,66,0.6);
+  letter-spacing: 0.1em;
+  animation: glowPulse 2s ease-in-out infinite;
 }
 
+/* ── Header ─────────────────────────────────── */
 .gameHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 30px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 30px;
+  background: linear-gradient(135deg, rgba(245,197,66,0.06) 0%, rgba(168,85,247,0.06) 100%);
+  border-bottom: 1px solid rgba(245,197,66,0.18);
+  backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .gameHeader h2 {
-    color: #1a1a2e;
-    font-size: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
-    margin: 0;
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 1.9rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f5c542 0%, #fde68a 40%, #f5c542 70%, #c9932a 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+  letter-spacing: 0.06em;
+  margin: 0;
 }
 
 .gameControls {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .controlBtn {
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.5);
-    color: #1a1a2e;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s;
+  padding: 9px 18px;
+  background: rgba(245,197,66,0.08);
+  color: var(--gold, #f5c542);
+  border: 1px solid rgba(245,197,66,0.28);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition, all 0.25s);
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-
 .controlBtn:hover {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(0, 0, 0, 0.2);
+  background: rgba(245,197,66,0.18);
+  border-color: var(--gold, #f5c542);
+  box-shadow: 0 0 14px rgba(245,197,66,0.25);
+  transform: translateY(-1px);
 }
 
 .themeBtn {
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.5);
-    color: #1a1a2e;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 16px;
+  padding: 9px 12px;
+  background: rgba(245,197,66,0.08);
+  color: var(--gold, #f5c542);
+  border: 1px solid rgba(245,197,66,0.28);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition, all 0.25s);
+  font-size: 1.05rem;
 }
-
 .themeBtn:hover {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(0, 0, 0, 0.2);
+  background: rgba(245,197,66,0.18);
+  box-shadow: 0 0 14px rgba(245,197,66,0.25);
+  transform: rotate(20deg);
 }
 
 .userDisplay {
-    color: #1a1a2e;
-    font-size: 18px;
-    font-weight: 500;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary, #f0e6d3);
+  letter-spacing: 0.04em;
 }
 
+/* ── Game Layout ────────────────────────────── */
 .gameContainer {
-    display: flex;
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 20px;
-    gap: 30px;
+  display: flex;
+  max-width: 1280px;
+  margin: 28px auto;
+  padding: 0 24px;
+  gap: 28px;
+  animation: fadeIn 0.4s ease-out;
 }
 
+/* ── Sidebar ────────────────────────────────── */
 .gameSidebar {
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
 }
 
+/* ── Player Cards ───────────────────────────── */
 .playerCard {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, var(--bg-card, #16161f), var(--bg-card2, #1c1c28));
+  padding: 20px 18px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: var(--shadow-card, 0 8px 32px rgba(0,0,0,0.5));
+  border: 1px solid var(--border, rgba(245,197,66,0.14));
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition, all 0.25s);
+}
+
+.playerCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(245,197,66,0.06) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .playerCard.current {
-    border: 3px solid #28a745;
+  border-color: rgba(74,222,128,0.45);
+  box-shadow: 0 0 20px rgba(74,222,128,0.12), var(--shadow-card, 0 8px 32px rgba(0,0,0,0.5));
+}
+.playerCard.current::before {
+  background: radial-gradient(circle at 50% 0%, rgba(74,222,128,0.08) 0%, transparent 70%);
 }
 
 .playerCard.opponent {
-    border: 3px solid #dc3545;
+  border-color: rgba(239,68,68,0.4);
+  box-shadow: 0 0 20px rgba(239,68,68,0.1), var(--shadow-card, 0 8px 32px rgba(0,0,0,0.5));
+}
+.playerCard.opponent::before {
+  background: radial-gradient(circle at 50% 0%, rgba(239,68,68,0.07) 0%, transparent 70%);
 }
 
 .playerAvatar {
-    font-size: 3rem;
-    margin-bottom: 10px;
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  animation: floatY 3s ease-in-out infinite;
+  display: block;
 }
 
 .playerNameText {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary, #f0e6d3);
+  margin-bottom: 4px;
+  letter-spacing: 0.04em;
 }
 
 .playerStatusText,
 .playerRole {
-    color: #666;
-    font-size: 14px;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  color: var(--text-muted, #8a8a9a);
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
 }
 
+.playerRole {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* ── Game Info Panel ────────────────────────── */
 .gameInfo {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, var(--bg-card, #16161f), var(--bg-card2, #1c1c28));
+  padding: 20px 18px;
+  border-radius: 18px;
+  text-align: center;
+  border: 1px solid var(--border, rgba(245,197,66,0.14));
+  box-shadow: var(--shadow-card, 0 8px 32px rgba(0,0,0,0.5));
 }
 
 .turnIndicator {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.gameStatusDisplay {
-    font-weight: 500;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted, #8a8a9a);
+  margin-bottom: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .gameTimer {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #667eea;
-    text-align: center;
-    margin: 10px 0;
-    font-family: "Courier New", monospace;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--gold, #f5c542);
+  text-align: center;
+  margin: 8px 0;
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 16px rgba(245,197,66,0.5);
 }
 
+.gameStatusDisplay {
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Board Container ────────────────────────── */
 .boardContainer {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 8px;
 }
 
-/* Chessboard */
+/* ── Chessboard ─────────────────────────────── */
 .chessboard {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-    gap: 1px;
-    background-color: #8b4513;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    touch-action: manipulation;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 0;
+  background: linear-gradient(135deg, #2a1a0a, #1a0d05);
+  padding: 12px;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px rgba(245,197,66,0.35),
+    0 0 0 4px rgba(0,0,0,0.6),
+    0 0 30px rgba(245,197,66,0.15),
+    0 20px 60px rgba(0,0,0,0.8);
+  touch-action: manipulation;
+  animation: glowPulse 4s ease-in-out infinite;
+  transition: box-shadow 0.3s;
 }
 
+/* ── Squares ────────────────────────────────── */
 .square {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    transition: background-color 0.2s;
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  transition: background-color 0.15s;
 }
 
 .square.light {
-    background-color: #f0d9b5;
+  background-color: #f0d9b5;
 }
 
 .square.dark {
-    background-color: #b58863;
+  background-color: #b58863;
 }
 
 .square:hover {
-    background-color: #ffd700;
+  background-color: rgba(245,197,66,0.55) !important;
 }
 
+/* ── Pieces ─────────────────────────────────── */
 .piece {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    user-select: none;
-    -webkit-user-select: none;
-    pointer-events: auto;
-    touch-action: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto;
+  touch-action: none;
+  transition: transform 0.15s, filter 0.15s;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,0.5));
 }
 
-.piece:active {
-    cursor: grabbing;
-}
+.piece:active { cursor: grabbing; }
+
+.piece:hover { transform: scale(1.12); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6)); }
 
 .whitePiece {
-    color: #ffffff;
-    text-shadow: 1px 1px 2px #000000;
+  color: #ffffff;
+  text-shadow: 0 1px 3px #000, 0 0 8px rgba(255,255,255,0.3);
 }
 
 .blackPiece {
-    color: #000000;
-    text-shadow: 1px 1px 2px #ffffff;
+  color: #1a0a00;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.4);
 }
 
-/* Move highlighting */
+/* ── Move Highlighting ──────────────────────── */
 .square.selected {
-    background-color: #ffd700 !important;
-    box-shadow: inset 0 0 0 3px #ff8c00;
+  background-color: rgba(245,197,66,0.7) !important;
+  box-shadow: inset 0 0 0 3px rgba(245,197,66,0.9);
 }
 
 .square.possibleMove {
-    position: relative;
+  position: relative;
 }
 
 .square.possibleMove::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    background-color: rgba(0, 255, 0, 0.6);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 22px; height: 22px;
+  background: radial-gradient(circle, rgba(245,197,66,0.85) 40%, rgba(245,197,66,0.3) 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: glowPulse 1.5s ease-in-out infinite;
 }
 
 .square.possibleMove:hover {
-    background-color: rgba(0, 255, 0, 0.3) !important;
+  background-color: rgba(245,197,66,0.35) !important;
 }
 
-/* Dark mode overrides */
-:global(.dark-mode) .loadingContainer {
-    color: white;
+/* ── Light-mode board overrides ─────────────── */
+:global(.light-mode) .loadingContainer { color: #7c3aed; text-shadow: 0 0 20px rgba(124,58,237,0.4); }
+:global(.light-mode) .gameHeader { background: linear-gradient(135deg, rgba(124,58,237,0.05) 0%, rgba(168,85,247,0.05) 100%); border-bottom-color: rgba(124,58,237,0.2); }
+:global(.light-mode) .gameHeader h2 { background: linear-gradient(135deg, #7c3aed, #a855f7, #6d28d9); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+:global(.light-mode) .controlBtn { background: rgba(124,58,237,0.08); color: #7c3aed; border-color: rgba(124,58,237,0.3); }
+:global(.light-mode) .controlBtn:hover { background: rgba(124,58,237,0.16); box-shadow: 0 0 14px rgba(124,58,237,0.2); border-color: #7c3aed; }
+:global(.light-mode) .themeBtn { background: rgba(124,58,237,0.08); color: #7c3aed; border-color: rgba(124,58,237,0.3); }
+:global(.light-mode) .playerCard { background: #fff; border-color: rgba(124,58,237,0.15); }
+:global(.light-mode) .playerCard.current { border-color: rgba(34,197,94,0.5); }
+:global(.light-mode) .playerCard.opponent { border-color: rgba(239,68,68,0.4); }
+:global(.light-mode) .playerNameText { color: #1a1a2e; }
+:global(.light-mode) .gameInfo { background: #fff; border-color: rgba(124,58,237,0.15); }
+:global(.light-mode) .gameTimer { color: #7c3aed; text-shadow: 0 0 16px rgba(124,58,237,0.35); }
+:global(.light-mode) .userDisplay { color: #1a1a2e; }
+:global(.light-mode) .chessboard { box-shadow: 0 0 0 2px rgba(124,58,237,0.35), 0 0 0 4px rgba(0,0,0,0.12), 0 0 30px rgba(124,58,237,0.1), 0 12px 40px rgba(0,0,0,0.2); }
+:global(.light-mode) .square.selected { background-color: rgba(124,58,237,0.55) !important; box-shadow: inset 0 0 0 3px rgba(124,58,237,0.8); }
+:global(.light-mode) .square:hover { background-color: rgba(124,58,237,0.4) !important; }
+:global(.light-mode) .square.possibleMove::after { background: radial-gradient(circle, rgba(124,58,237,0.8) 40%, rgba(124,58,237,0.25) 100%); }
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 900px) {
+  .square { width: 52px; height: 52px; }
+  .piece { font-size: 34px; }
+  .square.possibleMove::after { width: 16px; height: 16px; }
+  .gameContainer { flex-direction: column; gap: 20px; padding: 0 14px; }
+  .gameSidebar { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 14px; }
+  .playerCard { flex: 1; min-width: 140px; }
+  .gameInfo { flex: 1; min-width: 180px; }
 }
 
-:global(.dark-mode) .gameHeader {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-:global(.dark-mode) .gameHeader h2 {
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-:global(.dark-mode) .controlBtn,
-:global(.dark-mode) .themeBtn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-:global(.dark-mode) .controlBtn:hover,
-:global(.dark-mode) .themeBtn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
-:global(.dark-mode) .userDisplay {
-    color: white;
-}
-
-:global(.dark-mode) .playerCard,
-:global(.dark-mode) .gameInfo {
-    background: #1e293b;
-    color: white;
-}
-
-:global(.dark-mode) .playerNameText,
-:global(.dark-mode) .turnIndicator {
-    color: white;
-}
-
-:global(.dark-mode) .playerStatusText,
-:global(.dark-mode) .playerRole {
-    color: #94a3b8;
-}
-
-:global(.dark-mode) .chessboard {
-    background-color: #1e293b;
-}
-
-:global(.dark-mode) .square.light {
-    background-color: #ecf0f1;
-}
-
-:global(.dark-mode) .square.dark {
-    background-color: #95a5a6;
-}
-
-:global(.dark-mode) .square.selected {
-    background-color: #ffa500 !important;
-    box-shadow: inset 0 0 0 3px #ff6347;
-}
-
-:global(.dark-mode) .square.possibleMove::after {
-    background-color: rgba(144, 238, 144, 0.8);
-}
-
-:global(.dark-mode) .square.possibleMove:hover {
-    background-color: rgba(144, 238, 144, 0.3) !important;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .square {
-        width: 45px;
-        height: 45px;
-    }
-
-    .piece {
-        font-size: 32px;
-    }
-
-    .square.possibleMove::after {
-        width: 15px;
-        height: 15px;
-    }
-
-    .gameContainer {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .gameSidebar {
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .playerCard {
-        flex: 1;
-        min-width: 150px;
-    }
-
-    .gameInfo {
-        flex: 1;
-        min-width: 200px;
-    }
+@media (max-width: 500px) {
+  .square { width: 40px; height: 40px; }
+  .piece { font-size: 26px; }
+  .chessboard { padding: 7px; }
+  .gameTimer { font-size: 1.5rem; }
 }

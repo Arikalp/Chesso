@@ -1,655 +1,691 @@
+/* ═══════════════════════════════════════════
+   LOBBY — Gamified CSS
+═══════════════════════════════════════════ */
+
+/* Loading */
 .loadingContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    color: #1a1a2e;
-    font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 1.8rem;
+  color: var(--gold, #f5c542);
+  text-shadow: 0 0 20px rgba(245,197,66,0.6);
+  letter-spacing: 0.1em;
+  animation: glowPulse 2s ease-in-out infinite;
 }
 
+/* ── Layout ─────────────────────────────────── */
 .lobbyContainer {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 24px 40px;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.5s ease-out;
 }
 
+/* ── Header ─────────────────────────────────── */
 .lobbyHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px 30px;
-    border-radius: 15px;
-    margin-bottom: 30px;
-    backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(245,197,66,0.06) 0%, rgba(168,85,247,0.06) 100%);
+  border: 1px solid var(--border-bright, rgba(245,197,66,0.3));
+  padding: 18px 30px;
+  border-radius: var(--radius-lg, 20px);
+  margin-bottom: 28px;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-gold);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shimmer stripe across header */
+.lobbyHeader::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(245,197,66,0.06) 50%, transparent 100%);
+  background-size: 200% auto;
+  animation: shimmer 6s linear infinite;
+  pointer-events: none;
 }
 
 .lobbyHeader h1 {
-    color: #1a1a2e;
-    font-size: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 2.4rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f5c542 0%, #fde68a 40%, #f5c542 70%, #c9932a 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+  letter-spacing: 0.06em;
+  text-shadow: none;
 }
 
 .userInfo {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .userInfo span {
-    color: #333;
-    font-size: 18px;
-    font-weight: 500;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #f0e6d3);
+  letter-spacing: 0.05em;
 }
 
+/* ── Header Buttons ─────────────────────────── */
 .logoutBtn,
-.themeBtn {
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.5);
-    color: #1a1a2e;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s;
+.themeBtn,
+.installBtn {
+  padding: 9px 20px;
+  border: 1px solid var(--border-bright, rgba(245,197,66,0.35));
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(245, 197, 66, 0.08);
+  color: var(--gold, #f5c542);
 }
 
-.logoutBtn:hover,
-.themeBtn:hover {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(0, 0, 0, 0.2);
+.logoutBtn:hover, .themeBtn:hover, .installBtn:hover {
+  background: rgba(245, 197, 66, 0.18);
+  border-color: var(--gold, #f5c542);
+  box-shadow: 0 0 14px rgba(245,197,66,0.25);
+  transform: translateY(-1px);
 }
 
-.themeBtn {
-    font-size: 16px;
-    padding: 8px 12px;
+.themeBtn { padding: 9px 14px; font-size: 1rem; }
+
+.installBtn {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.35);
+}
+.installBtn:hover {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #4ade80;
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.25);
 }
 
+/* ── Content Grid ───────────────────────────── */
 .lobbyContent {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
 }
 
+/* ── Game Option Cards ──────────────────────── */
 .gameOptions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
 }
 
 .optionCard {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
+  background: linear-gradient(145deg, var(--bg-card, #16161f) 0%, var(--bg-card2, #1c1c28) 100%);
+  border: 1px solid var(--border, rgba(245,197,66,0.14));
+  padding: 28px 22px;
+  border-radius: var(--radius-lg, 20px);
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* Corner accent */
+.optionCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, rgba(245,197,66,0.25), transparent);
+  border-radius: 0 0 40px 0;
+  transition: var(--transition);
 }
 
 .optionCard:hover {
-    transform: translateY(-5px);
+  transform: translateY(-6px);
+  border-color: var(--border-bright, rgba(245,197,66,0.4));
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 20px rgba(245,197,66,0.12);
+}
+
+.optionCard:hover::before {
+  width: 60px; height: 60px;
+  background: linear-gradient(135deg, rgba(245,197,66,0.35), transparent);
 }
 
 .optionCard h3 {
-    color: #333;
-    margin-bottom: 10px;
-    font-size: 1.5rem;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold, #f5c542);
+  margin-bottom: 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .optionCard p {
-    color: #666;
-    margin-bottom: 20px;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  color: var(--text-muted, #8a8a9a);
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
 }
 
 .optionCard input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    font-size: 16px;
-    background: white;
-    color: #333;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(245,197,66,0.2);
+  border-radius: var(--radius-sm, 8px);
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  letter-spacing: 0.05em;
+  background: rgba(0,0,0,0.35);
+  color: var(--text-primary, #f0e6d3);
+  outline: none;
+  transition: var(--transition);
 }
 
+.optionCard input::placeholder { color: var(--text-dim, #4a4a5a); }
+
+.optionCard input:focus {
+  border-color: var(--gold, #f5c542);
+  box-shadow: 0 0 0 3px rgba(245,197,66,0.12);
+  background: rgba(0,0,0,0.5);
+}
+
+/* ── Primary Button ─────────────────────────── */
 .primaryBtn {
-    width: 100%;
-    padding: 15px;
-    background: #667eea;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
+  width: 100%;
+  padding: 13px 18px;
+  background: linear-gradient(135deg, #f5c542 0%, #c9932a 100%);
+  color: #0a0a0f;
+  border: none;
+  border-radius: var(--radius-sm, 8px);
+  font-size: 0.9rem;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.primaryBtn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background-size: 200% auto;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .primaryBtn:hover {
-    background: #5a6fd8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245,197,66,0.45);
+  filter: brightness(1.08);
 }
 
-/* Chat Section */
+.primaryBtn:hover::after { opacity: 1; }
+.primaryBtn:active { transform: translateY(0); filter: brightness(0.95); }
+
+/* ── Secondary Button ───────────────────────── */
+.secondaryBtn {
+  transition: var(--transition);
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.secondaryBtn:hover { background: rgba(245,197,66,0.06) !important; color: var(--gold, #f5c542) !important; border-color: rgba(245,197,66,0.3) !important; }
+
+/* ── Room Code Display ──────────────────────── */
 .createdRoomInfo {
-    background: #f8f9fc;
-    border-radius: 12px;
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-    margin-top: 15px;
+  background: rgba(0,0,0,0.3);
+  border-radius: var(--radius-md, 14px);
+  padding: 14px;
+  border: 1px solid rgba(245,197,66,0.2);
+  margin-top: 14px;
 }
 
 .roomCodeDisplay {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 1.1rem;
-    color: #333;
-    background: white;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px dashed #667eea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.85rem;
+  color: var(--text-muted, #8a8a9a);
+  background: rgba(0,0,0,0.4);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px dashed rgba(245,197,66,0.35);
 }
 
 .roomCodeDisplay strong {
-    color: #667eea;
-    font-family: monospace;
-    font-size: 1.3rem;
-    letter-spacing: 2px;
-}
-
-.secondaryBtn {
-    transition: all 0.2s;
-}
-
-.secondaryBtn:hover {
-    background: rgba(0, 0, 0, 0.05) !important;
-}
-
-:global(.dark-mode) .createdRoomInfo {
-    background: #0f172a;
-    border-color: #334155;
-}
-
-:global(.dark-mode) .roomCodeDisplay {
-    background: #1e293b;
-    border-color: #667eea;
-    color: white;
-}
-
-:global(.dark-mode) .secondaryBtn:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
-}
-
-.chatSection {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    overflow: hidden;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-}
-
-.chatHeader {
-    background: #667eea;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 500;
-}
-
-.playerIdMini {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
+  color: var(--gold, #f5c542);
+  font-size: 1.4rem;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px rgba(245,197,66,0.4);
 }
 
 .copyBtnMini {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
+  background: rgba(245,197,66,0.15);
+  border: 1px solid rgba(245,197,66,0.3);
+  color: var(--gold, #f5c542);
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: var(--transition);
+}
+.copyBtnMini:hover { background: rgba(245,197,66,0.28); }
+
+/* ── Chat Section ───────────────────────────── */
+.chatSection {
+  background: linear-gradient(145deg, var(--bg-card, #16161f), var(--bg-card2, #1c1c28));
+  border: 1px solid var(--border, rgba(245,197,66,0.14));
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
+  overflow: hidden;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
 }
 
-.copyBtnMini:hover {
-    background: rgba(255, 255, 255, 0.3);
+.chatHeader {
+  background: linear-gradient(90deg, rgba(245,197,66,0.12), rgba(168,85,247,0.1));
+  border-bottom: 1px solid var(--border-bright, rgba(245,197,66,0.25));
+  color: var(--gold, #f5c542);
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.playerIdMini {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted, #8a8a9a);
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
 }
 
 .chatMessages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    background: #f8f9fa;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .chatMessage {
-    padding: 8px 12px;
-    border-radius: 10px;
-    max-width: 80%;
-    word-wrap: break-word;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 82%;
+  word-wrap: break-word;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.88rem;
 }
 
 .chatMessage.own {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-    color: white;
-    align-self: flex-end;
-    margin-left: auto;
-    border-bottom-right-radius: 2px;
+  background: linear-gradient(135deg, rgba(245,197,66,0.25), rgba(200,147,42,0.2));
+  border: 1px solid rgba(245,197,66,0.3);
+  color: #fde68a;
+  align-self: flex-end;
+  margin-left: auto;
+  border-bottom-right-radius: 2px;
 }
 
 .chatMessage.other {
-    background: white;
-    color: #333;
-    border: 1px solid #e0e0e0;
-    align-self: flex-start;
-    border-bottom-left-radius: 2px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-primary, #f0e6d3);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
 }
 
 .messageSender {
-    font-size: 12px;
-    font-weight: 500;
-    margin-bottom: 2px;
-    opacity: 0.8;
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  opacity: 0.75;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .messageContent {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 
 .messageTime {
-    font-size: 11px;
-    opacity: 0.6;
-    margin-top: 2px;
+  font-size: 0.68rem;
+  opacity: 0.5;
+  margin-top: 2px;
 }
 
 .messageMenu {
-    background: rgba(0, 0, 0, 0.1);
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: rgba(255,255,255,0.07);
+  border: none;
+  color: var(--text-muted, #8a8a9a);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: var(--transition);
 }
-
-.messageMenu:hover {
-    background: rgba(0, 0, 0, 0.2);
-    transform: scale(1.05);
-}
+.messageMenu:hover { background: rgba(245,197,66,0.15); color: var(--gold, #f5c542); }
 
 .chatInputContainer {
-    display: flex;
-    padding: 15px;
-    background: white;
-    border-top: 1px solid #e0e0e0;
-    gap: 10px;
+  display: flex;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.3);
+  border-top: 1px solid var(--border, rgba(245,197,66,0.1));
+  gap: 10px;
 }
 
 .chatInputContainer input {
-    flex: 1;
-    padding: 10px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 25px;
-    outline: none;
-    font-size: 14px;
-    background: white;
-    color: #333;
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid rgba(245,197,66,0.2);
+  border-radius: 50px;
+  outline: none;
+  font-size: 0.9rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary, #f0e6d3);
+  transition: var(--transition);
 }
-
+.chatInputContainer input::placeholder { color: var(--text-dim, #4a4a5a); }
 .chatInputContainer input:focus {
-    border-color: #667eea;
+  border-color: var(--gold, #f5c542);
+  box-shadow: 0 0 0 3px rgba(245,197,66,0.1);
 }
 
 .sendBtn {
-    padding: 10px 20px;
-    background: #667eea;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.3s;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #f5c542, #c9932a);
+  color: #0a0a0f;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  transition: var(--transition);
 }
-
-.sendBtn:hover {
-    background: #5a6fd8;
-}
+.sendBtn:hover { filter: brightness(1.1); box-shadow: 0 4px 14px rgba(245,197,66,0.4); transform: translateY(-1px); }
 
 .emptyChat {
-    text-align: center;
-    color: #999;
-    font-style: italic;
-    margin-top: 50px;
+  text-align: center;
+  color: var(--text-dim, #4a4a5a);
+  font-style: italic;
+  margin-top: 50px;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  letter-spacing: 0.05em;
 }
 
-/* Social Section */
+/* ── Social Section ─────────────────────────── */
 .socialSection {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    margin-bottom: 20px;
+  background: linear-gradient(145deg, var(--bg-card, #16161f), var(--bg-card2, #1c1c28));
+  border: 1px solid var(--border, rgba(245,197,66,0.14));
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .socialTabs {
-    display: flex;
-    background: #f8f9fa;
+  display: flex;
+  background: rgba(0,0,0,0.3);
+  border-bottom: 1px solid var(--border, rgba(245,197,66,0.1));
 }
 
 .socialTab {
-    flex: 1;
-    padding: 15px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: #666;
-    transition: all 0.3s;
+  flex: 1;
+  padding: 13px 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-muted, #8a8a9a);
+  transition: var(--transition);
+  text-transform: uppercase;
+  position: relative;
+}
+
+.socialTab::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%; right: 50%;
+  height: 2px;
+  background: var(--gold, #f5c542);
+  transition: var(--transition);
+  border-radius: 2px 2px 0 0;
 }
 
 .socialTab.active {
-    background: white;
-    color: #667eea;
-    border-bottom: 3px solid #667eea;
+  color: var(--gold, #f5c542);
+  background: rgba(245,197,66,0.05);
 }
+.socialTab.active::after { left: 15%; right: 15%; }
 
-.socialTab:hover {
-    background: rgba(102, 126, 234, 0.1);
-}
+.socialTab:hover { color: var(--text-primary, #f0e6d3); background: rgba(255,255,255,0.03); }
 
 .tabContent {
-    padding: 25px;
-    max-height: 300px;
-    overflow-y: auto;
+  padding: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: transparent;
 }
 
-/* Player/Invite Items */
+/* ── Player / Invite Items ──────────────────── */
 .playerItem,
 .inviteItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border: 2px solid #f0f0f0;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    transition: all 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 16px;
+  border: 1px solid rgba(245,197,66,0.1);
+  border-radius: var(--radius-md, 14px);
+  margin-bottom: 10px;
+  background: rgba(0,0,0,0.2);
+  transition: var(--transition);
 }
 
 .playerItem:hover,
 .inviteItem:hover {
-    border-color: #667eea;
-    background: #f8f9ff;
+  border-color: rgba(245,197,66,0.3);
+  background: rgba(245,197,66,0.04);
+  transform: translateX(3px);
 }
 
 .playerName {
-    font-weight: 500;
-    color: #333;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary, #f0e6d3);
+  letter-spacing: 0.03em;
 }
 
 .playerStatus {
-    color: #28a745;
-    font-size: 14px;
+  color: #4ade80;
+  font-size: 0.8rem;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-weight: 500;
 }
 
+/* Small action buttons */
 .inviteBtn,
 .acceptBtn,
-.declineBtn {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-.inviteBtn {
-    background: #667eea;
-    color: white;
-}
-
-.acceptBtn {
-    background: #28a745;
-    color: white;
-    margin-right: 5px;
-}
-
-.declineBtn {
-    background: #dc3545;
-    color: white;
-}
-
+.declineBtn,
 .friendBtn {
-    padding: 6px 12px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    margin-left: 5px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: var(--transition);
 }
 
-.friendBtn.pending {
-    background: #ffc107;
-}
+.inviteBtn { background: linear-gradient(135deg, #f5c542, #c9932a); color: #0a0a0f; }
+.inviteBtn:hover { box-shadow: 0 4px 14px rgba(245,197,66,0.4); transform: translateY(-1px); }
 
-.friendBtn:disabled {
-    background: #6c757d;
-    cursor: not-allowed;
-}
+.acceptBtn { background: linear-gradient(135deg, #22d3ee, #0891b2); color: #0a0a0f; margin-right: 5px; }
+.acceptBtn:hover { box-shadow: 0 4px 14px rgba(34,211,238,0.3); transform: translateY(-1px); }
 
-/* Game Invitations */
+.declineBtn { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; }
+.declineBtn:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.3); transform: translateY(-1px); }
+
+.friendBtn { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); margin-left: 5px; padding: 5px 12px; }
+.friendBtn:hover { background: rgba(74,222,128,0.25); }
+.friendBtn.pending { background: rgba(251,191,36,0.15); color: #fbbf24; border-color: rgba(251,191,36,0.3); }
+.friendBtn:disabled { background: rgba(100,100,120,0.15); color: #555570; cursor: not-allowed; border-color: rgba(100,100,120,0.2); }
+
+/* ── Game Invitations ───────────────────────── */
 .gameInvites {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+  background: linear-gradient(145deg, var(--bg-card, #16161f), var(--bg-card2, #1c1c28));
+  border: 1px solid var(--border, rgba(245,197,66,0.14));
+  padding: 22px;
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
 }
 
 .gameInvites h3 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 1.3rem;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  color: var(--gold, #f5c542);
+  margin-bottom: 18px;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.invitesList {
-    max-height: 300px;
-    overflow-y: auto;
+.invitesList { max-height: 300px; overflow-y: auto; }
+
+/* ── Light mode overrides ───────────────────── */
+:global(.light-mode) .lobbyHeader {
+  background: linear-gradient(135deg, rgba(102,60,200,0.06) 0%, rgba(168,85,247,0.06) 100%);
+  border-color: rgba(102,60,200,0.25);
 }
 
-/* PWA Install Button */
-.installBtn {
-    padding: 8px 16px;
-    background: #28a745;
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s;
-    margin-right: 10px;
+:global(.light-mode) .lobbyHeader h1 {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #6d28d9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.installBtn:hover {
-    background: #218838;
-    transform: translateY(-1px);
+:global(.light-mode) .logoutBtn,
+:global(.light-mode) .themeBtn {
+  background: rgba(124,58,237,0.08);
+  color: #7c3aed;
+  border-color: rgba(124,58,237,0.3);
+}
+:global(.light-mode) .logoutBtn:hover,
+:global(.light-mode) .themeBtn:hover {
+  background: rgba(124,58,237,0.16);
+  box-shadow: 0 0 14px rgba(124,58,237,0.2);
 }
 
-/* Dark mode overrides */
-:global(.dark-mode) .loadingContainer {
-    color: white;
+:global(.light-mode) .optionCard {
+  background: #fff;
+  border-color: rgba(124,58,237,0.15);
+}
+:global(.light-mode) .optionCard:hover { border-color: rgba(124,58,237,0.4); }
+:global(.light-mode) .optionCard h3 { color: #7c3aed; }
+:global(.light-mode) .optionCard p { color: #6b7280; }
+:global(.light-mode) .optionCard input { background: #f9f7ff; color: #1a1a2e; border-color: rgba(124,58,237,0.2); }
+:global(.light-mode) .optionCard input::placeholder { color: #9ca3af; }
+
+:global(.light-mode) .socialSection,
+:global(.light-mode) .chatSection,
+:global(.light-mode) .gameInvites {
+  background: #fff;
+  border-color: rgba(124,58,237,0.15);
 }
 
-:global(.dark-mode) .lobbyHeader {
-    background: rgba(0, 0, 0, 0.3);
+:global(.light-mode) .chatHeader {
+  background: linear-gradient(90deg, rgba(124,58,237,0.08), rgba(168,85,247,0.06));
+  border-bottom-color: rgba(124,58,237,0.2);
+  color: #7c3aed;
 }
 
-:global(.dark-mode) .lobbyHeader h1 {
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+:global(.light-mode) .socialTabs { background: #f5f3ff; border-bottom-color: rgba(124,58,237,0.12); }
+:global(.light-mode) .socialTab { color: #6b7280; }
+:global(.light-mode) .socialTab.active { color: #7c3aed; background: rgba(124,58,237,0.05); }
+:global(.light-mode) .socialTab::after { background: #7c3aed; }
+:global(.light-mode) .tabContent { background: transparent; }
+
+:global(.light-mode) .playerItem,
+:global(.light-mode) .inviteItem { background: #faf9ff; border-color: rgba(124,58,237,0.12); }
+:global(.light-mode) .playerItem:hover,
+:global(.light-mode) .inviteItem:hover { background: #f5f3ff; border-color: rgba(124,58,237,0.3); }
+:global(.light-mode) .playerName { color: #1a1a2e; }
+
+:global(.light-mode) .chatMessages { background: #faf9ff; }
+:global(.light-mode) .chatMessage.other { background: #f0eaff; border-color: rgba(124,58,237,0.12); color: #1a1a2e; }
+:global(.light-mode) .chatMessage.own { background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(168,85,247,0.1)); border-color: rgba(124,58,237,0.25); color: #4c1d95; }
+
+:global(.light-mode) .chatInputContainer { background: #f5f3ff; border-top-color: rgba(124,58,237,0.1); }
+:global(.light-mode) .chatInputContainer input { background: #fff; color: #1a1a2e; border-color: rgba(124,58,237,0.2); }
+:global(.light-mode) .chatInputContainer input::placeholder { color: #9ca3af; }
+
+:global(.light-mode) .roomCodeDisplay { background: #f5f3ff; border-color: rgba(124,58,237,0.3); color: #6b7280; }
+:global(.light-mode) .roomCodeDisplay strong { color: #7c3aed; text-shadow: none; }
+:global(.light-mode) .createdRoomInfo { background: #faf9ff; border-color: rgba(124,58,237,0.2); }
+
+:global(.light-mode) .gameInvites h3 { color: #7c3aed; }
+:global(.light-mode) .userInfo span { color: #1a1a2e; }
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 900px) {
+  .lobbyContent { grid-template-columns: 1fr; }
+  .gameOptions { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 }
 
-:global(.dark-mode) .userInfo span {
-    color: white;
-}
-
-:global(.dark-mode) .logoutBtn,
-:global(.dark-mode) .themeBtn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-:global(.dark-mode) .logoutBtn:hover,
-:global(.dark-mode) .themeBtn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
-:global(.dark-mode) .optionCard,
-:global(.dark-mode) .socialSection,
-:global(.dark-mode) .gameInvites,
-:global(.dark-mode) .chatSection {
-    background: rgba(30, 41, 59, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-}
-
-:global(.dark-mode) .optionCard h3,
-:global(.dark-mode) .gameInvites h3 {
-    color: white;
-}
-
-:global(.dark-mode) .optionCard p {
-    color: #94a3b8;
-}
-
-:global(.dark-mode) .optionCard input {
-    background: #0f172a;
-    color: white;
-    border-color: #334155;
-}
-
-:global(.dark-mode) .optionCard input:focus {
-    border-color: #667eea;
-}
-
-:global(.dark-mode) .socialTabs {
-    background: #0f172a;
-}
-
-:global(.dark-mode) .socialTab {
-    color: #94a3b8;
-}
-
-:global(.dark-mode) .socialTab.active {
-    background: #1e293b;
-    color: #667eea;
-}
-
-:global(.dark-mode) .playerItem,
-:global(.dark-mode) .inviteItem {
-    border-color: #334155;
-    background: #0f172a;
-}
-
-:global(.dark-mode) .playerItem:hover,
-:global(.dark-mode) .inviteItem:hover {
-    border-color: #667eea;
-    background: #1e293b;
-}
-
-:global(.dark-mode) .playerName {
-    color: white;
-}
-
-:global(.dark-mode) .playerStatus {
-    color: #94a3b8;
-}
-
-/* Removed redundant chatSection dark background since it's grouped above */
-
-:global(.dark-mode) .chatMessages {
-    background: #0f172a;
-}
-
-:global(.dark-mode) .chatMessage.other {
-    background: #1e293b;
-    color: white;
-    border-color: #334155;
-}
-
-:global(.dark-mode) .chatInputContainer {
-    background: #1e293b;
-    border-top-color: #334155;
-}
-
-:global(.dark-mode) .chatInputContainer input {
-    background: #0f172a;
-    color: white;
-    border-color: #334155;
-}
-
-:global(.dark-mode) .chatInputContainer input:focus {
-    border-color: #667eea;
-}
-
-:global(.dark-mode) .emptyChat {
-    color: #94a3b8;
-}
-
-:global(.dark-mode) .tabContent {
-    background: #1e293b;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .lobbyContent {
-        grid-template-columns: 1fr;
-    }
-
-    .gameOptions {
-        grid-template-columns: 1fr;
-    }
-
-    .lobbyHeader {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-
-    .socialTabs {
-        flex-direction: column;
-    }
+@media (max-width: 600px) {
+  .lobbyHeader { flex-direction: column; gap: 14px; text-align: center; padding: 16px 18px; }
+  .lobbyHeader h1 { font-size: 1.8rem; }
+  .gameOptions { grid-template-columns: 1fr; }
+  .socialTabs { flex-wrap: wrap; }
 }

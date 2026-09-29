@@ -1,242 +1,302 @@
+/* ═══════════════════════════════════════════
+   AUTH PAGE — Gamified CSS
+═══════════════════════════════════════════ */
+
 .authContainer {
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #1a1a2e;
+  width: 100%;
+  max-width: 440px;
+  padding: 20px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
 .authCard {
-    background: white;
-    border-radius: 20px;
-    padding: 40px 30px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
+  background: linear-gradient(145deg, var(--bg-card, #16161f) 0%, var(--bg-card2, #1c1c28) 100%);
+  border: 1px solid var(--border-bright, rgba(245,197,66,0.3));
+  border-radius: 24px;
+  padding: 40px 34px;
+  box-shadow:
+    0 0 0 1px rgba(245,197,66,0.1),
+    0 30px 70px rgba(0,0,0,0.7),
+    0 0 40px rgba(245,197,66,0.08);
+  text-align: center;
+  width: 100%;
+  animation: fadeIn 0.5s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glowing top accent bar */
+.authCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f5c542, #fde68a, #f5c542, transparent);
+  border-radius: 0 0 4px 4px;
+}
+
+/* Subtle radial glow */
+.authCard::after {
+  content: '';
+  position: absolute;
+  top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 300px; height: 200px;
+  background: radial-gradient(ellipse, rgba(245,197,66,0.08), transparent 70%);
+  pointer-events: none;
 }
 
 .authCard h1 {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-    color: #1a1a2e;
-    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f5c542 0%, #fde68a 40%, #f5c542 70%, #c9932a 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+  letter-spacing: 0.06em;
+  margin-bottom: 28px;
 }
 
 .headerRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
 }
 
-.headerRow h1 {
-    margin: 0;
-    margin-bottom: 0;
-}
+.headerRow h1 { margin: 0; margin-bottom: 0; }
 
+/* ── Theme Button ───────────────────────────── */
 .themeBtn {
-    background: #667eea;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
+  background: rgba(245,197,66,0.1);
+  color: var(--gold, #f5c542);
+  border: 1px solid rgba(245,197,66,0.3);
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  transition: var(--transition, all 0.25s);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
 }
-
 .themeBtn:hover {
-    background: #5a6fd8;
-    transform: scale(1.1);
+  background: rgba(245,197,66,0.2);
+  box-shadow: 0 0 14px rgba(245,197,66,0.3);
+  transform: rotate(20deg);
 }
 
+/* ── Tabs ───────────────────────────────────── */
 .authTabs {
-    display: flex;
-    margin-bottom: 30px;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #f5f5f5;
+  display: flex;
+  margin-bottom: 28px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(245,197,66,0.15);
+  gap: 0;
 }
 
 .tabBtn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s;
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted, #8a8a9a);
+  transition: var(--transition, all 0.25s);
 }
 
 .tabBtn.active {
-    background: #667eea;
-    color: white;
+  background: linear-gradient(135deg, #f5c542, #c9932a);
+  color: #0a0a0f;
+  box-shadow: 0 0 16px rgba(245,197,66,0.35);
 }
 
+.tabBtn:not(.active):hover {
+  background: rgba(245,197,66,0.08);
+  color: var(--text-primary, #f0e6d3);
+}
+
+/* ── Form ───────────────────────────────────── */
 .authForm {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .authForm input {
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-    background: white;
-    color: #333;
+  padding: 14px 18px;
+  border: 1px solid rgba(245,197,66,0.18);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  transition: var(--transition, all 0.25s);
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary, #f0e6d3);
+  outline: none;
 }
+
+.authForm input::placeholder { color: var(--text-dim, #4a4a5a); }
 
 .authForm input:focus {
-    outline: none;
-    border-color: #667eea;
+  border-color: var(--gold, #f5c542);
+  box-shadow: 0 0 0 3px rgba(245,197,66,0.12), 0 0 14px rgba(245,197,66,0.1);
+  background: rgba(0,0,0,0.55);
 }
 
-.authForm>button {
-    padding: 15px;
-    background: #667eea;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
+.authForm > button {
+  padding: 14px;
+  background: linear-gradient(135deg, #f5c542 0%, #c9932a 100%);
+  color: #0a0a0f;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition, all 0.25s);
+  position: relative;
+  overflow: hidden;
 }
-
-.authForm>button:hover {
-    background: #5a6fd8;
+.authForm > button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background-size: 200% auto;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
+.authForm > button:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 24px rgba(245,197,66,0.45);
+  transform: translateY(-2px);
+}
+.authForm > button:hover::after { opacity: 1; }
+.authForm > button:active { transform: translateY(0); }
 
+/* ── Password Field ─────────────────────────── */
 .passwordContainer {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
-
-.passwordContainer input {
-    flex: 1;
-    padding-right: 45px;
-}
+.passwordContainer input { flex: 1; padding-right: 48px; }
 
 .togglePassword {
-    position: absolute;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 5px;
-    z-index: 1;
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  z-index: 1;
+  color: var(--text-muted, #8a8a9a);
+  transition: color 0.2s;
 }
+.togglePassword:hover { color: var(--gold, #f5c542); }
 
-.togglePassword:hover {
-    opacity: 0.7;
-}
-
+/* ── Divider ────────────────────────────────── */
 .divider {
-    margin: 20px 0;
-    color: #999;
-    position: relative;
-    text-align: center;
+  margin: 18px 0;
+  color: var(--text-muted, #8a8a9a);
+  position: relative;
+  text-align: center;
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-
 .divider::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #e0e0e0;
-    z-index: 1;
+  content: '';
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245,197,66,0.25), transparent);
+  z-index: 1;
 }
-
 .divider span {
-    background: white;
-    padding: 0 15px;
-    z-index: 2;
-    position: relative;
+  background: var(--bg-card, #16161f);
+  padding: 0 14px;
+  z-index: 2;
+  position: relative;
 }
 
+/* ── Google Button ──────────────────────────── */
 .googleBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    background: white;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 16px;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid rgba(245,197,66,0.2);
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition, all 0.25s);
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-primary, #f0e6d3);
+  width: 100%;
 }
-
 .googleBtn:hover {
-    border-color: #4285f4;
-    box-shadow: 0 2px 10px rgba(66, 133, 244, 0.2);
+  border-color: rgba(245,197,66,0.45);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 0 16px rgba(245,197,66,0.12);
+  transform: translateY(-1px);
 }
 
-/* Dark mode styles */
-:global(.dark-mode) .authCard {
-    background: #1e293b;
-    color: white;
+/* ── Light mode ─────────────────────────────── */
+:global(.light-mode) .authCard {
+  background: #fff;
+  border-color: rgba(124,58,237,0.25);
+  box-shadow: 0 30px 70px rgba(100,50,200,0.12), 0 0 40px rgba(124,58,237,0.06);
 }
-
-:global(.dark-mode) .authCard h1 {
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+:global(.light-mode) .authCard::before {
+  background: linear-gradient(90deg, transparent, #7c3aed, #a855f7, #7c3aed, transparent);
 }
-
-:global(.dark-mode) .authForm input {
-    background: #0f172a;
-    color: white;
-    border-color: #334155;
+:global(.light-mode) .authCard::after {
+  background: radial-gradient(ellipse, rgba(124,58,237,0.06), transparent 70%);
 }
-
-:global(.dark-mode) .authForm input:focus {
-    border-color: #667eea;
+:global(.light-mode) .authCard h1 {
+  background: linear-gradient(135deg, #7c3aed, #a855f7, #6d28d9);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
-
-:global(.dark-mode) .authTabs {
-    background: #0f172a;
-}
-
-:global(.dark-mode) .tabBtn {
-    color: #94a3b8;
-}
-
-:global(.dark-mode) .tabBtn.active {
-    background: #667eea;
-    color: white;
-}
-
-:global(.dark-mode) .googleBtn {
-    background: #0f172a;
-    border-color: #334155;
-    color: white;
-}
-
-:global(.dark-mode) .googleBtn:hover {
-    border-color: #667eea;
-}
-
-:global(.dark-mode) .divider span {
-    background: #1e293b;
-    color: #94a3b8;
-}
-
-:global(.dark-mode) .divider::before {
-    background: #334155;
-}
-
-:global(.dark-mode) .togglePassword {
-    color: white;
-}
+:global(.light-mode) .authTabs { background: #f5f3ff; border-color: rgba(124,58,237,0.15); }
+:global(.light-mode) .tabBtn { color: #6b7280; }
+:global(.light-mode) .tabBtn.active { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; box-shadow: 0 0 16px rgba(124,58,237,0.3); }
+:global(.light-mode) .tabBtn:not(.active):hover { background: rgba(124,58,237,0.06); color: #1a1a2e; }
+:global(.light-mode) .authForm input { background: #f9f7ff; color: #1a1a2e; border-color: rgba(124,58,237,0.18); }
+:global(.light-mode) .authForm input::placeholder { color: #9ca3af; }
+:global(.light-mode) .authForm input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); background: #fff; }
+:global(.light-mode) .authForm > button { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; }
+:global(.light-mode) .authForm > button:hover { box-shadow: 0 6px 24px rgba(124,58,237,0.4); }
+:global(.light-mode) .togglePassword { color: #6b7280; }
+:global(.light-mode) .togglePassword:hover { color: #7c3aed; }
+:global(.light-mode) .divider { color: #6b7280; }
+:global(.light-mode) .divider::before { background: linear-gradient(90deg, transparent, rgba(124,58,237,0.2), transparent); }
+:global(.light-mode) .divider span { background: #fff; }
+:global(.light-mode) .googleBtn { background: #fff; border-color: rgba(124,58,237,0.2); color: #1a1a2e; }
+:global(.light-mode) .googleBtn:hover { border-color: #7c3aed; box-shadow: 0 0 16px rgba(124,58,237,0.1); }
+:global(.light-mode) .themeBtn { background: rgba(124,58,237,0.08); color: #7c3aed; border-color: rgba(124,58,237,0.25); }
+:global(.light-mode) .themeBtn:hover { box-shadow: 0 0 14px rgba(124,58,237,0.25); }
