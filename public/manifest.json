@@ -1,6 +1,6 @@
 {
-  "name": "Chesso - Multiplayer Chess Game",
-  "short_name": "Chesso",
+  "name": "CyberChess - Multiplayer Chess Game",
+  "short_name": "CyberChess",
   "description": "Play chess online with friends in real-time",
   "start_url": "/",
   "display": "standalone",

@@ -194,7 +194,10 @@ export default function Logo({
         <div className={styles.textGroup}>
           <div className={styles.brandRow}>
             <span className={styles.crownIcon}>♔</span>
-            <span className={styles.brandName}>CHESSO</span>
+            <span className={styles.brandName}>
+              <span className={styles.cyberWord}>CYBER</span>
+              <span className={styles.chessWord}>CHESS</span>
+            </span>
             <span className={styles.crownIcon}>♛</span>
           </div>
           {showTagline && (

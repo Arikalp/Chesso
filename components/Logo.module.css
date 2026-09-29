@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════
-   CHESSO LOGO — Theme-matching gamified brand logo
+   CYBERCHESS LOGO — Theme-matching gamified brand logo
    ══════════════════════════════════════════════════ */
 
 .logoWrapper {
@@ -59,7 +59,7 @@
 }
 
 .crownIcon {
-  font-size: 0.85em;
+  font-size: 0.8em;
   color: var(--gold, #f5c542);
   filter: drop-shadow(0 0 8px rgba(245, 197, 66, 0.5));
   animation: crownBounce 3s ease-in-out infinite;
@@ -69,29 +69,46 @@
   font-family: var(--font-orbitron, 'Orbitron', sans-serif);
   font-weight: 900;
   letter-spacing: 0.08em;
-  background: linear-gradient(135deg, #f5c542 0%, #fffbf0 35%, #fde68a 50%, #f5c542 75%, #c9932a 100%);
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.cyberWord {
+  background: linear-gradient(135deg, #f5c542 0%, #fffbf0 35%, #fde68a 55%, #f5c542 80%, #c9932a 100%);
   background-size: 220% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin: 0;
-  padding: 0;
   animation: logoShimmer 4s linear infinite;
+  display: inline-block;
+}
+
+.chessWord {
+  background: linear-gradient(135deg, #e9d5ff 0%, #ffffff 30%, #c084fc 55%, #a855f7 80%, #7e22ce 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: logoShimmer 4s linear infinite;
+  animation-delay: 0.5s;
   display: inline-block;
 }
 
 .tagline {
   font-family: var(--font-ui, 'Rajdhani', sans-serif);
-  font-size: 0.62em;
+  font-size: 0.6em;
   font-weight: 700;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--neon-purple, #a855f7);
   opacity: 0.9;
   margin-top: 3px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .taglineDot {
@@ -108,11 +125,11 @@
   gap: 8px;
 }
 .sizeSm .emblemSvg {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
 }
 .sizeSm .brandName {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   letter-spacing: 0.06em;
 }
 
@@ -121,11 +138,11 @@
   gap: 12px;
 }
 .sizeMd .emblemSvg {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
 }
 .sizeMd .brandName {
-  font-size: 2.1rem;
+  font-size: 1.75rem;
 }
 
 /* Large (auth card, splash) */
@@ -133,14 +150,14 @@
   gap: 14px;
 }
 .sizeLg .emblemSvg {
-  width: 58px;
-  height: 58px;
+  width: 54px;
+  height: 54px;
 }
 .sizeLg .brandName {
-  font-size: 2.6rem;
+  font-size: 2.2rem;
 }
 .sizeLg .tagline {
-  font-size: 0.72em;
+  font-size: 0.68em;
 }
 
 /* Extra Large */
@@ -148,14 +165,14 @@
   gap: 18px;
 }
 .sizeXl .emblemSvg {
-  width: 76px;
-  height: 76px;
+  width: 72px;
+  height: 72px;
 }
 .sizeXl .brandName {
-  font-size: 3.4rem;
+  font-size: 2.9rem;
 }
 .sizeXl .tagline {
-  font-size: 0.85em;
+  font-size: 0.8em;
 }
 
 /* ── Light Mode Adaptations ──────────────────────── */
@@ -163,8 +180,16 @@
   filter: drop-shadow(0 2px 8px rgba(124, 58, 237, 0.25)) drop-shadow(0 0 16px rgba(245, 197, 66, 0.3));
 }
 
-:global(.light-mode) .brandName {
-  background: linear-gradient(135deg, #1e1b4b 0%, #7c3aed 35%, #b45309 70%, #1e1b4b 100%);
+:global(.light-mode) .cyberWord {
+  background: linear-gradient(135deg, #92400e 0%, #d97706 45%, #b45309 85%, #78350f 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+:global(.light-mode) .chessWord {
+  background: linear-gradient(135deg, #581c87 0%, #7c3aed 45%, #a855f7 85%, #4c1d95 100%);
   background-size: 220% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -183,6 +208,19 @@
 :global(.light-mode) .taglineDot {
   background: #b45309;
   box-shadow: 0 0 4px #b45309;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .sizeMd .brandName {
+    font-size: 1.35rem;
+  }
+  .sizeLg .brandName {
+    font-size: 1.65rem;
+  }
+  .sizeXl .brandName {
+    font-size: 2.1rem;
+  }
 }
 
 /* ── Keyframes ───────────────────────────────────── */

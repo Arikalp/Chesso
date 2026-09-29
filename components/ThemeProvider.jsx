@@ -8,7 +8,7 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
-    const saved = localStorage.getItem("chesso-theme") || "dark";
+    const saved = localStorage.getItem("cyberchess-theme") || localStorage.getItem("chesso-theme") || "dark";
     setTheme(saved);
     applyTheme(saved);
   }, []);
@@ -25,7 +25,7 @@ export function ThemeProvider({ children }) {
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
-    localStorage.setItem("chesso-theme", next);
+    localStorage.setItem("cyberchess-theme", next);
     applyTheme(next);
   };
 

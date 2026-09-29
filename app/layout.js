@@ -23,7 +23,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Chesso — Chess Reimagined",
+  title: "CyberChess — Chess Reimagined",
   description: "Play chess online vs friends or AI. Real-time multiplayer chess with gamified UI.",
   manifest: "/manifest.json",
   icons: {

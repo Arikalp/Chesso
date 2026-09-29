@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chesso-v1';
+const CACHE_NAME = 'cyberchess-v1';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
