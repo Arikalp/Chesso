@@ -5,9 +5,11 @@ import { useRouter, useParams } from "next/navigation";
 import { Chess } from "chess.js";
 import {
   doc,
+  getDoc,
   updateDoc,
   onSnapshot,
   serverTimestamp,
+  increment,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/components/AuthProvider";
@@ -260,6 +262,64 @@ export default function GamePage() {
     };
   }, [user, roomId, updateGameUI, router, toast]);
 
+  // Award points to both players when a game ends
+  async function awardPoints(gameData, endInfo) {
+    try {
+      const p1uid = gameData.player1?.uid;
+      const p2uid = gameData.player2?.uid;
+      if (!p1uid || !p2uid) return;
+
+      const WIN_PTS  = 25;
+      const LOSS_PTS = 15;
+      const DRAW_PTS = 5;
+
+      const p1Updates = {};
+      const p2Updates = {};
+
+      if (endInfo.winner === "draw") {
+        p1Updates.points = increment(DRAW_PTS);
+        p1Updates.draws  = increment(1);
+        p2Updates.points = increment(DRAW_PTS);
+        p2Updates.draws  = increment(1);
+      } else if (endInfo.winner === "white") {
+        // player1 is white
+        p1Updates.points = increment(WIN_PTS);
+        p1Updates.wins   = increment(1);
+        p2Updates.points = increment(-LOSS_PTS);
+        p2Updates.losses = increment(1);
+      } else {
+        // player2 is black wins
+        p2Updates.points = increment(WIN_PTS);
+        p2Updates.wins   = increment(1);
+        p1Updates.points = increment(-LOSS_PTS);
+        p1Updates.losses = increment(1);
+      }
+
+      // Ensure points don't go below 0 by reading first then clamping
+      const [p1Doc, p2Doc] = await Promise.all([
+        getDoc(doc(db, "users", p1uid)),
+        getDoc(doc(db, "users", p2uid)),
+      ]);
+
+      // Apply p1 updates
+      if (p1Doc.exists()) {
+        const cur1 = p1Doc.data().points ?? 500;
+        const delta1 = p1Updates.points?.operand ?? 0;
+        p1Updates.points = Math.max(0, cur1 + delta1);
+        await updateDoc(doc(db, "users", p1uid), p1Updates);
+      }
+      // Apply p2 updates
+      if (p2Doc.exists()) {
+        const cur2 = p2Doc.data().points ?? 500;
+        const delta2 = p2Updates.points?.operand ?? 0;
+        p2Updates.points = Math.max(0, cur2 + delta2);
+        await updateDoc(doc(db, "users", p2uid), p2Updates);
+      }
+    } catch (e) {
+      console.error("Error awarding points:", e);
+    }
+  }
+
   // Make move — single source of truth for game ending writes
   async function makeMove(move) {
     const chess = chessRef.current;
@@ -317,6 +377,12 @@ export default function GamePage() {
       }
 
       await updateDoc(doc(db, "gameRooms", roomId), updateData);
+
+      // Award points AFTER game state is written
+      if (endInfo.ended) {
+        const gameSnap = await getDoc(doc(db, "gameRooms", roomId));
+        if (gameSnap.exists()) await awardPoints(gameSnap.data(), endInfo);
+      }
     } catch (error) {
       console.error("Error making move:", error);
       toast.error("Failed to make move. Please try again.");

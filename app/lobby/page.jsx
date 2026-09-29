@@ -115,6 +115,15 @@ export default function LobbyPage() {
       if (!user) return;
       const playerId = generatePlayerId(user.uid);
       try {
+        // Check existing doc to avoid overwriting earned stats
+        const existingDoc = await getDoc(doc(db, "users", user.uid));
+        const existingData = existingDoc.exists() ? existingDoc.data() : {};
+        const statsDefaults = {};
+        if (existingData.points === undefined) statsDefaults.points = 500;
+        if (existingData.wins   === undefined) statsDefaults.wins   = 0;
+        if (existingData.losses === undefined) statsDefaults.losses = 0;
+        if (existingData.draws  === undefined) statsDefaults.draws  = 0;
+
         await setDoc(
           doc(db, "users", user.uid),
           {
@@ -123,6 +132,7 @@ export default function LobbyPage() {
             playerId,
             isOnline,
             lastSeen: serverTimestamp(),
+            ...statsDefaults,
           },
           { merge: true }
         );
@@ -716,9 +726,12 @@ export default function LobbyPage() {
             <button onClick={toggleTheme} className={styles.themeBtn}>
               {theme === "dark" ? "☀️" : "🌙"}
             </button>
-            <span>{user.displayName || user.email}</span>
-            <button onClick={handleLogout} className={styles.logoutBtn}>
-              Logout
+            <button onClick={() => router.push("/leaderboard")} className={styles.logoutBtn} style={{ background: "rgba(168,85,247,0.1)", color: "#c084fc", borderColor: "rgba(168,85,247,0.3)" }}>
+              🏆 Leaderboard
+            </button>
+            <button onClick={() => router.push("/profile")} className={styles.logoutBtn} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(245,197,66,0.2)", border: "1.5px solid rgba(245,197,66,0.5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.85rem", fontWeight: 900, color: "#f5c542", flexShrink: 0 }}>{(user.displayName || user.email || "?")[0].toUpperCase()}</span>
+              {user.displayName || user.email?.split("@")[0]}
             </button>
           </div>
         </header>

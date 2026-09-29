@@ -1,0 +1,233 @@
+/* ═══════════════════════════════════════════
+   LEADERBOARD — Gamified CSS
+═══════════════════════════════════════════ */
+
+.loading {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh;
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 1.6rem; color: var(--gold, #f5c542);
+  text-shadow: 0 0 20px rgba(245,197,66,0.5);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.leaderboardMain { position: relative; z-index: 1; min-height: 100vh; }
+
+/* ── Header ─────────────────────────────── */
+.pageHeader {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 28px;
+  background: linear-gradient(135deg, rgba(245,197,66,0.06), rgba(168,85,247,0.06));
+  border-bottom: 1px solid rgba(245,197,66,0.18);
+  backdrop-filter: blur(16px);
+  position: sticky; top: 0; z-index: 50;
+}
+
+.pageTitle {
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 1.5rem; font-weight: 900;
+  background: linear-gradient(135deg, #f5c542, #fde68a, #c9932a);
+  background-size: 200% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: shimmer 4s linear infinite; letter-spacing: 0.06em; margin: 0;
+}
+
+.backBtn {
+  padding: 9px 18px; background: rgba(245,197,66,0.08); color: var(--gold, #f5c542);
+  border: 1px solid rgba(245,197,66,0.28); border-radius: 50px; cursor: pointer;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  transition: var(--transition, all 0.25s);
+}
+.backBtn:hover { background: rgba(245,197,66,0.18); box-shadow: 0 0 14px rgba(245,197,66,0.25); transform: translateY(-1px); }
+
+.headerRight { display: flex; gap: 10px; align-items: center; }
+
+.iconBtn {
+  padding: 9px 12px; background: rgba(245,197,66,0.08); color: var(--gold, #f5c542);
+  border: 1px solid rgba(245,197,66,0.28); border-radius: 50px; cursor: pointer;
+  font-size: 1rem; transition: var(--transition, all 0.25s);
+}
+.iconBtn:hover { background: rgba(245,197,66,0.18); transform: rotate(20deg); }
+
+.profileBtn {
+  padding: 9px 18px; background: rgba(245,197,66,0.08); color: var(--gold, #f5c542);
+  border: 1px solid rgba(245,197,66,0.28); border-radius: 50px; cursor: pointer;
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  transition: var(--transition, all 0.25s);
+}
+.profileBtn:hover { background: rgba(245,197,66,0.18); box-shadow: 0 0 14px rgba(245,197,66,0.25); transform: translateY(-1px); }
+
+/* ── Content ─────────────────────────────── */
+.content {
+  max-width: 900px; margin: 0 auto;
+  padding: 28px 24px 48px;
+  display: flex; flex-direction: column; gap: 22px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* ── My Rank Card ────────────────────────── */
+.myRankCard {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 24px;
+  background: linear-gradient(145deg, var(--bg-card, #16161f), var(--bg-card2, #1c1c28));
+  border: 1px solid;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  position: relative; overflow: hidden;
+}
+.myRankCard::before {
+  content: ''; position: absolute; top: 0; left: 6%; right: 6%;
+  height: 2px; background: linear-gradient(90deg, transparent, #f5c542, #fde68a, #f5c542, transparent);
+}
+
+.myRankAvatar {
+  width: 56px; height: 56px; border-radius: 50%; border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 1.4rem; font-weight: 900; color: var(--gold, #f5c542);
+  background: rgba(0,0,0,0.4); flex-shrink: 0;
+}
+.myRankInfo { flex: 1; }
+.myRankName { font-family: var(--font-ui, 'Rajdhani', sans-serif); font-size: 1rem; font-weight: 700; color: var(--text-primary, #f0e6d3); }
+.myRankSub { font-family: var(--font-game, 'Orbitron', sans-serif); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; margin-top: 2px; }
+
+.myRankRight { text-align: right; }
+.myRankPts { font-family: var(--font-orbitron, 'Orbitron', sans-serif); font-size: 1.8rem; font-weight: 900; text-shadow: 0 0 12px currentColor; }
+.myRankLabel { font-size: 0.65rem; font-family: var(--font-game, 'Orbitron', sans-serif); letter-spacing: 0.1em; color: var(--text-dim, #4a4a5a); }
+
+.myRankPos { text-align: center; min-width: 64px; }
+.myRankPosNum { display: block; font-family: var(--font-orbitron, 'Orbitron', sans-serif); font-size: 1.5rem; font-weight: 900; color: var(--gold, #f5c542); text-shadow: 0 0 12px rgba(245,197,66,0.5); }
+.myRankPosLabel { font-size: 0.65rem; font-family: var(--font-game, 'Orbitron', sans-serif); letter-spacing: 0.1em; color: var(--text-muted, #8a8a9a); text-transform: uppercase; }
+
+/* ── Podium ──────────────────────────────── */
+.podium {
+  display: flex; justify-content: center; align-items: flex-end; gap: 12px;
+  padding: 24px 0 0;
+}
+
+.podiumSlot {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  flex: 1; max-width: 200px;
+}
+
+.podiumMedal { font-size: 2rem; }
+.podiumCrown { font-size: 1.6rem; color: var(--gold, #f5c542); text-shadow: 0 0 14px rgba(245,197,66,0.6); animation: floatY 2.5s ease-in-out infinite; }
+
+.podiumAvatar {
+  width: 64px; height: 64px; border-radius: 50%; border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-size: 1.5rem; font-weight: 900;
+  background: linear-gradient(135deg, var(--bg-card, #16161f), var(--bg-card2, #1c1c28));
+  color: var(--text-primary, #f0e6d3);
+}
+.first .podiumAvatar { width: 80px; height: 80px; font-size: 2rem; }
+
+.podiumName { font-family: var(--font-ui, 'Rajdhani', sans-serif); font-size: 0.9rem; font-weight: 700; color: var(--text-primary, #f0e6d3); text-align: center; }
+.podiumPts { font-family: var(--font-orbitron, 'Orbitron', sans-serif); font-size: 0.9rem; font-weight: 800; text-shadow: 0 0 8px currentColor; }
+
+.podiumBlock {
+  width: 100%; border-radius: 8px 8px 0 0;
+  border: 1px solid; border-bottom: none;
+}
+
+/* ── Table ───────────────────────────────── */
+.tableCard {
+  background: linear-gradient(145deg, var(--bg-card, #16161f), var(--bg-card2, #1c1c28));
+  border: 1px solid rgba(245,197,66,0.12);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 64px 1fr 120px 120px 100px;
+  padding: 14px 20px;
+  background: rgba(0,0,0,0.35);
+  border-bottom: 1px solid rgba(245,197,66,0.12);
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted, #8a8a9a);
+  gap: 12px;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 64px 1fr 120px 120px 100px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: center;
+  gap: 12px;
+  transition: var(--transition, all 0.25s);
+  border-left: 3px solid transparent;
+}
+.tableRow:hover { background: rgba(255,255,255,0.02); }
+.tableRow:last-child { border-bottom: none; }
+.tableRowMe {
+  background: rgba(245,197,66,0.04) !important;
+  border-left: 3px solid !important;
+}
+
+.rankCell { display: flex; align-items: center; justify-content: center; }
+.medal { font-size: 1.4rem; }
+.rankNum { font-family: var(--font-orbitron, 'Orbitron', sans-serif); font-size: 0.85rem; font-weight: 700; color: var(--text-muted, #8a8a9a); }
+
+.playerCell { display: flex; align-items: center; gap: 12px; }
+.playerAvatar {
+  width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif); font-size: 1rem; font-weight: 900;
+  background: rgba(0,0,0,0.4); flex-shrink: 0;
+}
+.playerInfo {}
+.playerName {
+  font-family: var(--font-ui, 'Rajdhani', sans-serif); font-size: 0.95rem; font-weight: 700;
+  color: var(--text-primary, #f0e6d3); display: flex; align-items: center; gap: 6px;
+}
+.youBadge {
+  font-family: var(--font-game, 'Orbitron', sans-serif);
+  font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em;
+  background: rgba(245,197,66,0.2); color: var(--gold, #f5c542);
+  border: 1px solid rgba(245,197,66,0.4);
+  padding: 1px 6px; border-radius: 4px;
+}
+.playerRank { font-family: var(--font-ui, 'Rajdhani', sans-serif); font-size: 0.75rem; font-weight: 600; margin-top: 1px; }
+
+.wldCell { font-family: var(--font-ui, 'Rajdhani', sans-serif); font-size: 0.9rem; font-weight: 600; color: var(--text-muted, #8a8a9a); }
+
+.winRateCell { display: flex; align-items: center; gap: 8px; }
+.winRateBar { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.winRateFill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+.winRateNum { font-family: var(--font-orbitron, 'Orbitron', sans-serif); font-size: 0.72rem; font-weight: 700; color: var(--text-muted, #8a8a9a); min-width: 32px; text-align: right; }
+
+.pointsCell { text-align: right; }
+.pointsNum { font-family: var(--font-orbitron, 'Orbitron', sans-serif); font-size: 1.1rem; font-weight: 900; text-shadow: 0 0 8px currentColor; }
+
+.skeletonRow { padding: 6px 20px; }
+.skeletonBar { background: rgba(255,255,255,0.04); border-radius: 10px; animation: glowPulse 1.5s ease-in-out infinite; }
+
+.emptyState { text-align: center; padding: 60px; color: var(--text-muted, #8a8a9a); font-family: var(--font-ui, 'Rajdhani', sans-serif); }
+
+/* ── Light mode ──────────────────────────── */
+:global(.light-mode) .myRankCard, :global(.light-mode) .tableCard { background: #fff; }
+:global(.light-mode) .tableHeader { background: #f5f3ff; border-bottom-color: rgba(124,58,237,0.12); }
+:global(.light-mode) .tableRow:hover { background: #faf9ff; }
+:global(.light-mode) .tableRowMe { background: rgba(124,58,237,0.04) !important; }
+:global(.light-mode) .playerName { color: #1a1a2e; }
+:global(.light-mode) .rankNum { color: #6b7280; }
+
+/* ── Responsive ──────────────────────────── */
+@media (max-width: 700px) {
+  .tableHeader, .tableRow { grid-template-columns: 44px 1fr 80px 90px; }
+  .tableHeader span:nth-child(4), .winRateCell { display: none; }
+  .podium { gap: 6px; }
+  .pageTitle { font-size: 1.1rem; }
+}
+@media (max-width: 480px) {
+  .tableHeader, .tableRow { grid-template-columns: 40px 1fr 90px; }
+  .tableHeader span:nth-child(3), .wldCell { display: none; }
+  .myRankCard { flex-wrap: wrap; }
+}
