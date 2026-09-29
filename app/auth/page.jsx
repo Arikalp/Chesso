@@ -149,11 +149,17 @@ export default function AuthPage() {
     <>
       <div className={styles.authContainer}>
         <div className={styles.authCard}>
-          <div className={styles.headerRow}>
+          <button
+            onClick={toggleTheme}
+            className={styles.themeBtn}
+            aria-label="Toggle Theme"
+            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
+
+          <div className={styles.logoHeader}>
             <Logo size="md" showTagline={true} />
-            <button onClick={toggleTheme} className={styles.themeBtn}>
-              {theme === "dark" ? "☀️" : "🌙"}
-            </button>
           </div>
 
           <div className={styles.authTabs}>
