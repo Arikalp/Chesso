@@ -27,8 +27,9 @@ export const metadata = {
   description: "Play chess online vs friends or AI. Real-time multiplayer chess with gamified UI.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicons/chesso.ico",
-    apple: "/icons/logo.jpg",
+    icon: "/icons/logo.svg",
+    shortcut: "/icons/logo.png",
+    apple: "/icons/logo.png",
   },
 };
 

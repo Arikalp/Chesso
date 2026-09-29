@@ -76,7 +76,7 @@ export default function LeaderboardPage() {
     return <div className={styles.loading}>♔ Loading Leaderboard... ♛</div>;
   }
 
-  const myRankInfo = myData ? getRankInfo(myData.points ?? 500) : null;
+  const myRankInfo = myData ? getRankInfo(myData.points ?? 50) : null;
 
   return (
     <main className={styles.leaderboardMain}>
@@ -111,7 +111,7 @@ export default function LeaderboardPage() {
             </div>
             <div className={styles.myRankRight}>
               <div className={styles.myRankPts} style={{ color: myRankInfo?.color }}>
-                {myData.points ?? 500}
+                {myData.points ?? 50}
               </div>
               <div className={styles.myRankLabel}>POINTS</div>
             </div>
@@ -134,7 +134,7 @@ export default function LeaderboardPage() {
                 {(players[1].name || "?")[0].toUpperCase()}
               </div>
               <div className={styles.podiumName}>{players[1].name?.split(" ")[0] || "Player"}</div>
-              <div className={styles.podiumPts} style={{ color: "#c0c0c0" }}>{players[1].points ?? 500}</div>
+              <div className={styles.podiumPts} style={{ color: "#c0c0c0" }}>{players[1].points ?? 50}</div>
               <div className={styles.podiumBlock} style={{ height: 80, background: "rgba(192,192,192,0.15)", borderColor: "rgba(192,192,192,0.3)" }} />
             </div>
             {/* 1st */}
@@ -145,7 +145,7 @@ export default function LeaderboardPage() {
                 {(players[0].name || "?")[0].toUpperCase()}
               </div>
               <div className={styles.podiumName}>{players[0].name?.split(" ")[0] || "Player"}</div>
-              <div className={styles.podiumPts} style={{ color: "#f5c542" }}>{players[0].points ?? 500}</div>
+              <div className={styles.podiumPts} style={{ color: "#f5c542" }}>{players[0].points ?? 50}</div>
               <div className={styles.podiumBlock} style={{ height: 110, background: "rgba(245,197,66,0.12)", borderColor: "rgba(245,197,66,0.35)" }} />
             </div>
             {/* 3rd */}
@@ -155,7 +155,7 @@ export default function LeaderboardPage() {
                 {(players[2].name || "?")[0].toUpperCase()}
               </div>
               <div className={styles.podiumName}>{players[2].name?.split(" ")[0] || "Player"}</div>
-              <div className={styles.podiumPts} style={{ color: "#cd7f32" }}>{players[2].points ?? 500}</div>
+              <div className={styles.podiumPts} style={{ color: "#cd7f32" }}>{players[2].points ?? 50}</div>
               <div className={styles.podiumBlock} style={{ height: 60, background: "rgba(205,127,50,0.12)", borderColor: "rgba(205,127,50,0.3)" }} />
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function LeaderboardPage() {
             <div className={styles.emptyState}>No players yet. Be the first to play!</div>
           ) : (
             players.map((p, i) => {
-              const ri       = getRankInfo(p.points ?? 500);
+              const ri       = getRankInfo(p.points ?? 50);
               const isMe     = p.id === user.uid;
               const total    = (p.wins ?? 0) + (p.losses ?? 0) + (p.draws ?? 0);
               const winRate  = total > 0 ? Math.round(((p.wins ?? 0) / total) * 100) : 0;
@@ -229,7 +229,7 @@ export default function LeaderboardPage() {
                     <span className={styles.winRateNum}>{winRate}%</span>
                   </div>
                   <div className={styles.pointsCell} style={{ color: ri.color }}>
-                    <span className={styles.pointsNum}>{p.points ?? 500}</span>
+                    <span className={styles.pointsNum}>{p.points ?? 50}</span>
                   </div>
                 </div>
               );

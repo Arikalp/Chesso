@@ -1,0 +1,208 @@
+/* ══════════════════════════════════════════════════
+   CHESSO LOGO — Theme-matching gamified brand logo
+   ══════════════════════════════════════════════════ */
+
+.logoWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  user-select: none;
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-1.5px) scale(1.02);
+}
+
+.clickable:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* ── Emblem container ────────────────────────────── */
+.emblemContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.emblemSvg {
+  display: block;
+  transition: filter 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 0 10px rgba(245, 197, 66, 0.35)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.25));
+}
+
+.clickable:hover .emblemSvg {
+  filter: drop-shadow(0 0 16px rgba(245, 197, 66, 0.6)) drop-shadow(0 0 28px rgba(168, 85, 247, 0.45));
+  transform: scale(1.05) rotate(-1deg);
+}
+
+/* ── Text side ───────────────────────────────────── */
+.textGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.crownIcon {
+  font-size: 0.85em;
+  color: var(--gold, #f5c542);
+  filter: drop-shadow(0 0 8px rgba(245, 197, 66, 0.5));
+  animation: crownBounce 3s ease-in-out infinite;
+}
+
+.brandName {
+  font-family: var(--font-orbitron, 'Orbitron', sans-serif);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, #f5c542 0%, #fffbf0 35%, #fde68a 50%, #f5c542 75%, #c9932a 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  padding: 0;
+  animation: logoShimmer 4s linear infinite;
+  display: inline-block;
+}
+
+.tagline {
+  font-family: var(--font-ui, 'Rajdhani', sans-serif);
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--neon-purple, #a855f7);
+  opacity: 0.9;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.taglineDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold, #f5c542);
+  box-shadow: 0 0 6px var(--gold, #f5c542);
+}
+
+/* ── Size Variants ───────────────────────────────── */
+/* Small (in-game navbar, compact) */
+.sizeSm {
+  gap: 8px;
+}
+.sizeSm .emblemSvg {
+  width: 32px;
+  height: 32px;
+}
+.sizeSm .brandName {
+  font-size: 1.25rem;
+  letter-spacing: 0.06em;
+}
+
+/* Medium (default - lobby header, page headers) */
+.sizeMd {
+  gap: 12px;
+}
+.sizeMd .emblemSvg {
+  width: 44px;
+  height: 44px;
+}
+.sizeMd .brandName {
+  font-size: 2.1rem;
+}
+
+/* Large (auth card, splash) */
+.sizeLg {
+  gap: 14px;
+}
+.sizeLg .emblemSvg {
+  width: 58px;
+  height: 58px;
+}
+.sizeLg .brandName {
+  font-size: 2.6rem;
+}
+.sizeLg .tagline {
+  font-size: 0.72em;
+}
+
+/* Extra Large */
+.sizeXl {
+  gap: 18px;
+}
+.sizeXl .emblemSvg {
+  width: 76px;
+  height: 76px;
+}
+.sizeXl .brandName {
+  font-size: 3.4rem;
+}
+.sizeXl .tagline {
+  font-size: 0.85em;
+}
+
+/* ── Light Mode Adaptations ──────────────────────── */
+:global(.light-mode) .emblemSvg {
+  filter: drop-shadow(0 2px 8px rgba(124, 58, 237, 0.25)) drop-shadow(0 0 16px rgba(245, 197, 66, 0.3));
+}
+
+:global(.light-mode) .brandName {
+  background: linear-gradient(135deg, #1e1b4b 0%, #7c3aed 35%, #b45309 70%, #1e1b4b 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+:global(.light-mode) .crownIcon {
+  color: #b45309;
+  filter: drop-shadow(0 0 6px rgba(180, 83, 9, 0.4));
+}
+
+:global(.light-mode) .tagline {
+  color: #7c3aed;
+}
+
+:global(.light-mode) .taglineDot {
+  background: #b45309;
+  box-shadow: 0 0 4px #b45309;
+}
+
+/* ── Keyframes ───────────────────────────────────── */
+@keyframes logoShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes crownBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -7,6 +7,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { useTheme } from "@/components/ThemeProvider";
 import { useToast } from "@/components/Toast";
 import Footer from "@/components/Footer";
+import Logo from "@/components/Logo";
 import styles from "../game.module.css";
 import aiStyles from "./ai.module.css";
 
@@ -343,7 +344,7 @@ export default function AIGamePage() {
   return (
     <main>
       <div className={styles.gameHeader}>
-        <h2>♔ Chesso ♛</h2>
+        <Logo size="sm" linkToLobby={true} />
         <div className={styles.gameControls}>
           <button onClick={toggleTheme} className={styles.themeBtn}>{theme === "dark" ? "☀️" : "🌙"}</button>
           <button onClick={resetGame} className={styles.controlBtn}>🔄 New Game</button>

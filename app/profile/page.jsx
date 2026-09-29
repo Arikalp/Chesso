@@ -52,7 +52,14 @@ export default function ProfilePage() {
     try {
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
-        setUserData(userDoc.data());
+        const d = userDoc.data();
+        if (d.points === 500 && (d.wins ?? 0) === 0 && (d.losses ?? 0) === 0 && (d.draws ?? 0) === 0) {
+          try {
+            await updateDoc(doc(db, "users", user.uid), { points: 50 });
+            d.points = 50;
+          } catch (_) {}
+        }
+        setUserData(d);
       } else {
         // Initialize user stats
         const playerId = generatePlayerId(user.uid);
@@ -60,7 +67,7 @@ export default function ProfilePage() {
           name: user.displayName || user.email,
           email: user.email,
           playerId,
-          points: 500,
+          points: 50,
           wins: 0,
           losses: 0,
           draws: 0,
@@ -167,7 +174,7 @@ export default function ProfilePage() {
     return <div className={styles.loading}>♔ Loading Profile... ♛</div>;
   }
 
-  const pts     = userData?.points ?? 500;
+  const pts     = userData?.points ?? 50;
   const wins    = userData?.wins   ?? 0;
   const losses  = userData?.losses ?? 0;
   const draws   = userData?.draws  ?? 0;
@@ -292,7 +299,7 @@ export default function ProfilePage() {
                     { event: "Win (Opponent resigns)", pts: "+20", color: "#4ade80" },
                     { event: "Draw",                  pts: "+5",  color: "#fbbf24" },
                     { event: "Loss",                  pts: "−15", color: "#f87171" },
-                    { event: "Starting points",       pts: "500", color: "#38bdf8" },
+                    { event: "Starting points",       pts: "50",  color: "#38bdf8" },
                     { event: "Minimum points",        pts: "0",   color: "#8a8a9a" },
                   ].map(p => (
                     <div key={p.event} className={styles.pointsInfoRow}>

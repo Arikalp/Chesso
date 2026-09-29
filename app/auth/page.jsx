@@ -15,6 +15,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { useTheme } from "@/components/ThemeProvider";
 import { useToast } from "@/components/Toast";
 import Footer from "@/components/Footer";
+import Logo from "@/components/Logo";
 import styles from "./auth.module.css";
 
 export default function AuthPage() {
@@ -137,8 +138,8 @@ export default function AuthPage() {
     return (
       <div className={styles.authContainer}>
         <div className={styles.authCard}>
-          <h1>♔ Chesso ♛</h1>
-          <p>Loading...</p>
+          <Logo size="lg" showTagline={true} />
+          <p style={{ marginTop: "16px" }}>Loading...</p>
         </div>
       </div>
     );
@@ -149,7 +150,7 @@ export default function AuthPage() {
       <div className={styles.authContainer}>
         <div className={styles.authCard}>
           <div className={styles.headerRow}>
-            <h1>♔ Chesso ♛</h1>
+            <Logo size="md" showTagline={true} />
             <button onClick={toggleTheme} className={styles.themeBtn}>
               {theme === "dark" ? "☀️" : "🌙"}
             </button>

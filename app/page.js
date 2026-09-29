@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 
+import Logo from "@/components/Logo";
+
 export default function Home() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -22,14 +24,14 @@ export default function Home() {
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        color: "white",
-        fontSize: "2rem",
+        gap: "16px",
       }}
     >
-      ♔ Loading Chesso... ♛
+      <Logo size="xl" showTagline={true} taglineText="Loading Grandmaster Arena..." />
     </div>
   );
 }

@@ -25,6 +25,7 @@ import { useTheme } from "@/components/ThemeProvider";
 import { useToast } from "@/components/Toast";
 import ConfirmModal from "@/components/ConfirmModal";
 import Footer from "@/components/Footer";
+import Logo from "@/components/Logo";
 import styles from "./lobby.module.css";
 
 function generatePlayerId(uid) {
@@ -119,7 +120,9 @@ export default function LobbyPage() {
         const existingDoc = await getDoc(doc(db, "users", user.uid));
         const existingData = existingDoc.exists() ? existingDoc.data() : {};
         const statsDefaults = {};
-        if (existingData.points === undefined) statsDefaults.points = 500;
+        if (existingData.points === undefined || (existingData.points === 500 && (existingData.wins ?? 0) === 0 && (existingData.losses ?? 0) === 0 && (existingData.draws ?? 0) === 0)) {
+          statsDefaults.points = 50;
+        }
         if (existingData.wins   === undefined) statsDefaults.wins   = 0;
         if (existingData.losses === undefined) statsDefaults.losses = 0;
         if (existingData.draws  === undefined) statsDefaults.draws  = 0;
@@ -721,7 +724,7 @@ export default function LobbyPage() {
 
       <div className={styles.lobbyContainer}>
         <header className={styles.lobbyHeader}>
-          <h1>♔ Chesso ♛</h1>
+          <Logo size="md" showTagline={true} />
           <div className={styles.userInfo}>
             <button onClick={toggleTheme} className={styles.themeBtn}>
               {theme === "dark" ? "☀️" : "🌙"}

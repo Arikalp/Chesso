@@ -16,6 +16,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { useTheme } from "@/components/ThemeProvider";
 import { useToast } from "@/components/Toast";
 import Footer from "@/components/Footer";
+import Logo from "@/components/Logo";
 import styles from "../game.module.css";
 
 export default function GamePage() {
@@ -303,14 +304,14 @@ export default function GamePage() {
 
       // Apply p1 updates
       if (p1Doc.exists()) {
-        const cur1 = p1Doc.data().points ?? 500;
+        const cur1 = p1Doc.data().points ?? 50;
         const delta1 = p1Updates.points?.operand ?? 0;
         p1Updates.points = Math.max(0, cur1 + delta1);
         await updateDoc(doc(db, "users", p1uid), p1Updates);
       }
       // Apply p2 updates
       if (p2Doc.exists()) {
-        const cur2 = p2Doc.data().points ?? 500;
+        const cur2 = p2Doc.data().points ?? 50;
         const delta2 = p2Updates.points?.operand ?? 0;
         p2Updates.points = Math.max(0, cur2 + delta2);
         await updateDoc(doc(db, "users", p2uid), p2Updates);
@@ -561,7 +562,7 @@ export default function GamePage() {
   return (
     <main>
       <div className={styles.gameHeader}>
-        <h2>♔ Chesso ♛</h2>
+        <Logo size="sm" linkToLobby={true} />
         <div className={styles.gameControls}>
           <button onClick={toggleTheme} className={styles.themeBtn}>
             {theme === "dark" ? "☀️" : "🌙"}

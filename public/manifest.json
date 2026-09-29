@@ -4,21 +4,26 @@
   "description": "Play chess online with friends in real-time",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#667eea",
+  "background_color": "#0a0a0f",
+  "theme_color": "#f5c542",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icons/logo.jpg",
+      "src": "/icons/logo.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/logo.jpg",
+      "src": "/icons/logo.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ]
 }
